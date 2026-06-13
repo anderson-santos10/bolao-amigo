@@ -1,0 +1,82 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Meus Palpites</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-dark text-white">
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+
+        <h1 class="fw-bold">
+            ⚽ Meus Palpites
+        </h1>
+
+        <p class="text-secondary">
+            Copa do Mundo FIFA 2026
+        </p>
+
+    </div>
+
+    <div class="row g-4">
+
+        {% for palpite in palpites %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <div class="card bg-black border-secondary shadow h-100">
+
+                <div class="card-body text-center">
+
+                    <h5 class="mb-4">
+
+                        {{ palpite.jogo.time_casa.nome }}
+
+                        x
+
+                        {{ palpite.jogo.time_visitante.nome }}
+
+                    </h5>
+
+                    <div class="display-5 text-success fw-bold">
+
+                        {{ palpite.gols_casa }}
+
+                        X
+
+                        {{ palpite.gols_visitante }}
+
+                    </div>
+
+                    <hr>
+
+                    <small class="text-secondary">
+
+                        {{ palpite.jogo.data_jogo|date:"d/m/Y H:i" }}
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

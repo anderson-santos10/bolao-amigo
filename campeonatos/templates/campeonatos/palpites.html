@@ -1,0 +1,186 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+:root{
+    --bg-main:#141e26;
+    --bg-card:#202e3a;
+    --yellow:#ffd000;
+    --text-muted:#94a3b8;
+}
+
+.titulo{
+    font-size:70px;
+    font-family:'Anton',sans-serif;
+}
+
+.grupo-card{
+    background: var(--bg-card);
+    border-radius:16px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.06);
+}
+
+.grupo-header{
+    background: linear-gradient(90deg,#0f172a,#1d4ed8);
+    padding:10px;
+    text-align:center;
+}
+
+.bandeira{
+    width:38px;
+    height:26px;
+    object-fit:cover;
+    border-radius:4px;
+}
+
+.time-nome{
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+}
+
+.placar-input{
+    width:48px;
+    height:42px;
+    text-align:center;
+    font-weight:700;
+    border-radius:8px;
+    background:#0b1220;
+    color:white;
+    border:1px solid rgba(255,255,255,.1);
+}
+
+.vs{
+    font-weight:700;
+}
+
+.btn-enviar{
+    width:100%;
+    border:none;
+    border-radius:10px;
+    padding:10px;
+    font-weight:800;
+    background: linear-gradient(90deg,var(--yellow),#ffb300);
+    cursor:pointer;
+    margin-top:15px;
+}
+</style>
+
+{% if finalizado %}
+
+<div class="text-center mt-5">
+    <h1 style="color:#22c55e;font-weight:800;">
+        🎉 Todos os palpites foram enviados!
+    </h1>
+
+    <p class="text-muted">
+        Boa sorte! 🍀
+    </p>
+</div>
+
+{% else %}
+
+<div class="container-fluid py-3">
+
+    <div class="text-center mb-4">
+        <h2 class="titulo">COPA DO MUNDO FIFA 2026</h2>
+    </div>
+
+    <!-- 🔥 UM ÚNICO FORM (CORRETO) -->
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="row g-3">
+
+            {% for grupo in grupos %}
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="grupo-card h-100">
+
+                    <div class="grupo-header">
+                        <h2>GRUPO {{ grupo.nome }}</h2>
+                    </div>
+
+                    <div class="p-2">
+
+                        <!-- SELEÇÕES -->
+                        <div class="row text-center mb-2">
+                            {% for selecao in grupo.selecoes %}
+                            <div class="col-3">
+                                <img src="{{ selecao.bandeira }}" class="bandeira mb-1">
+                                <div class="time-nome">{{ selecao.nome }}</div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        {% for jogo in grupo.jogos %}
+
+                        <div class="p-2 mb-2" style="background:#0b1220;border-radius:10px;">
+
+                            <div class="text-center">
+                                <small class="text-muted">RODADA {{ forloop.counter }}</small>
+                            </div>
+
+                            <div class="row align-items-center">
+
+                                <!-- TIME CASA -->
+                                <div class="col-4 d-flex align-items-center gap-1">
+                                    <img src="{{ jogo.time1.bandeira }}" class="bandeira">
+                                    <span class="time-nome">{{ jogo.time1.nome }}</span>
+                                </div>
+
+                                <!-- INPUTS -->
+                                <div class="col-4 text-center">
+
+                                    <input type="number"
+                                           name="jogo_{{ jogo.id }}_casa"
+                                           min="0"
+                                           class="placar-input">
+
+                                    <span class="vs">X</span>
+
+                                    <input type="number"
+                                           name="jogo_{{ jogo.id }}_visitante"
+                                           min="0"
+                                           class="placar-input">
+
+                                </div>
+
+                                <!-- TIME VISITANTE -->
+                                <div class="col-4 d-flex justify-content-end align-items-center gap-1">
+                                    <span class="time-nome">{{ jogo.time2.nome }}</span>
+                                    <img src="{{ jogo.time2.bandeira }}" class="bandeira">
+                                </div>
+
+                            </div>
+
+                            <small class="d-block text-center text-muted mt-1">
+                                {{ jogo.data }} | {{ jogo.estadio }}
+                            </small>
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
+
+        <button type="submit" class="btn-enviar w-100">
+            ENVIAR PALPITES
+        </button>
+
+    </form>
+
+</div>
+
+{% endif %}
+
+{% endblock %}

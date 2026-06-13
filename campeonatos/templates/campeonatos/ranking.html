@@ -1,0 +1,237 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+:root {
+    --bg: #050814;
+    --card: rgba(255,255,255,0.04);
+    --stroke: rgba(255,255,255,0.08);
+    --green: #22c55e;
+    --gold: #fbbf24;
+    --silver: #cbd5e1;
+    --bronze: #d97706;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+}
+
+body {
+    background: radial-gradient(circle at top, #0b1224, #050814);
+    color: var(--text);
+}
+
+/* CARD PRINCIPAL */
+.ranking-box {
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: 18px;
+    padding: 20px;
+    backdrop-filter: blur(12px);
+}
+
+/* TÍTULO */
+.title {
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* ANIMAÇÃO TOP 3 */
+@keyframes pop {
+    from {transform: translateY(12px) scale(.95); opacity: 0;}
+    to {transform: translateY(0) scale(1); opacity: 1;}
+}
+
+.top-anim {
+    animation: pop .4s ease;
+}
+
+/* USER LOGADO */
+.me {
+    border-left: 3px solid var(--green);
+    background: rgba(34,197,94,0.08) !important;
+}
+
+/* AVATAR */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--stroke);
+}
+
+/* TOP COLORS */
+.gold { border: 3px solid var(--gold); }
+.silver { border: 3px solid var(--silver); }
+.bronze { border: 3px solid var(--bronze); }
+
+/* TABLE */
+.table-dark {
+    --bs-table-bg: transparent;
+}
+
+.table tr {
+    transition: .2s;
+}
+
+.table tr:hover {
+    background: rgba(255,255,255,0.04);
+}
+
+/* BADGE POSIÇÃO */
+.pos {
+    font-weight: 800;
+}
+</style>
+
+<div class="container py-4">
+
+    <!-- HEADER -->
+    <div class="text-center mb-4">
+        <h2 class="title"> RANKING DO BOLÃO 2026</h2>
+        <small class="text-secondary">Classificação geral do bolão</small>
+    </div>
+
+    <!-- TOP 3 -->
+    <div class="ranking-box mb-4">
+        <h5 class="mb-3">Top 3 do Ranking</h5>
+
+        <div class="row text-center align-items-end">
+
+            <!-- 2º -->
+            <div class="col-4 top-anim">
+                {% if ranking|length > 1 %}
+                {% with p=ranking.1 %}
+
+                    {% if p.user.profile.image %}
+                        <img class="avatar silver" src="{{ p.user.profile.image.url }}" style="width:75px;height:75px;">
+                    {% else %}
+                        <img class="avatar silver" src="https://via.placeholder.com/80" style="width:75px;height:75px;">
+                    {% endif %}
+
+                    <div class="fw-bold mt-2">🥈 {{ p.user.first_name|default:p.user.username }}</div>
+                    <small class="text-secondary">{{ p.pontuacao_total }} pts</small>
+
+                {% endwith %}
+                {% endif %}
+            </div>
+
+            <!-- 1º -->
+            <div class="col-4 top-anim">
+                {% if ranking|length > 0 %}
+                {% with p=ranking.0 %}
+
+                    {% if p.user.profile.image %}
+                        <img class="avatar gold" src="{{ p.user.profile.image.url }}" style="width:95px;height:95px;">
+                    {% else %}
+                        <img class="avatar gold" src="https://via.placeholder.com/100" style="width:95px;height:95px;">
+                    {% endif %}
+
+                    <div class="fw-bold mt-2">👑 {{ p.user.first_name|default:p.user.username }}</div>
+                    <div style="color: var(--gold); font-weight:800;">
+                        {{ p.pontuacao_total }} pts
+                    </div>
+
+                {% endwith %}
+                {% endif %}
+            </div>
+
+            <!-- 3º -->
+            <div class="col-4 top-anim">
+                {% if ranking|length > 2 %}
+                {% with p=ranking.2 %}
+
+                    {% if p.user.profile.image %}
+                        <img class="avatar bronze" src="{{ p.user.profile.image.url }}" style="width:75px;height:75px;">
+                    {% else %}
+                        <img class="avatar bronze" src="https://via.placeholder.com/80" style="width:75px;height:75px;">
+                    {% endif %}
+
+                    <div class="fw-bold mt-2">🥉 {{ p.user.first_name|default:p.user.username }}</div>
+                    <small class="text-secondary">{{ p.pontuacao_total }} pts</small>
+
+                {% endwith %}
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RANKING GERAL -->
+    <div class="ranking-box">
+
+        <table class="table table-dark align-middle">
+
+            <thead>
+                <tr class="text-secondary">
+                    <th>Pos</th>
+                    <th>Jogador</th>
+                    <th class="text-end">Pontos</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for p in ranking %}
+
+                <tr class="{% if p.user == request.user %}me{% endif %}">
+
+                    <!-- POSIÇÃO -->
+                    <td class="pos">
+                        {% if forloop.counter == 1 %}
+                            🥇 1º
+                        {% elif forloop.counter == 2 %}
+                            🥈 2º
+                        {% elif forloop.counter == 3 %}
+                            🥉 3º
+                        {% else %}
+                            {{ forloop.counter }}º
+                        {% endif %}
+                    </td>
+
+                    <!-- USER -->
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+
+                            {% if p.user.profile.image %}
+                                <img src="{{ p.user.profile.image.url }}" class="avatar">
+                            {% else %}
+                                <div class="avatar d-flex align-items-center justify-content-center bg-secondary text-dark fw-bold">
+                                    {{ p.user.username|slice:":2"|upper }}
+                                </div>
+                            {% endif %}
+
+                            <div class="fw-semibold">
+                                {{ p.user.first_name|default:p.user.username }}
+                            </div>
+
+                        </div>
+                    </td>
+
+                    <!-- PONTOS -->
+                    <td class="text-end fw-bold" style="color: var(--gold);">
+                        {{ p.pontuacao_total }} pts
+                    </td>
+
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="3" class="text-center text-muted py-4">
+                        Nenhum jogador no ranking ainda
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
