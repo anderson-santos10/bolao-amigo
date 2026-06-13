@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -87,6 +88,9 @@ USE_TZ = True
 
 # STATIC FILES
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 
 # MEDIA (IMPORTANTE pro upload de imagem)

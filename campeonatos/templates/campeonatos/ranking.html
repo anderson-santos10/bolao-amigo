@@ -5,231 +5,282 @@
 
 <style>
 :root {
-    --bg: #050814;
-    --card: rgba(255,255,255,0.04);
-    --stroke: rgba(255,255,255,0.08);
-    --green: #22c55e;
-    --gold: #fbbf24;
-    --silver: #cbd5e1;
-    --bronze: #d97706;
-    --text: #e5e7eb;
-    --muted: #94a3b8;
+    --bg-principal: #091124;
+    --bg-card: #141c2f;
+    --verde-chute: #3db46d;
+    --input-border: #232d45;
+    --texto-secundario: #7e8a9c;
 }
 
+/* BACKGROUND E TRATAMENTO DA FONTE */
 body {
-    background: radial-gradient(circle at top, #0b1224, #050814);
-    color: var(--text);
+    background-color: var(--bg-principal);
+    color: #ffffff;
+    font-family: 'Inter', sans-serif;
 }
 
-/* CARD PRINCIPAL */
+/* PAINÉIS DE RANKING COMPATÍVEIS */
 .ranking-box {
-    background: var(--card);
-    border: 1px solid var(--stroke);
-    border-radius: 18px;
-    padding: 20px;
-    backdrop-filter: blur(12px);
+    background-color: var(--bg-card);
+    border: 1px solid #1f2b48;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* TÍTULO */
+/* TÍTULOS */
 .title {
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     text-transform: uppercase;
+    color: #ffffff;
 }
 
-/* ANIMAÇÃO TOP 3 */
+/* ANIMAÇÃO SUAVE */
 @keyframes pop {
-    from {transform: translateY(12px) scale(.95); opacity: 0;}
-    to {transform: translateY(0) scale(1); opacity: 1;}
+    from { transform: translateY(12px) scale(.97); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
 }
 
 .top-anim {
-    animation: pop .4s ease;
+    animation: pop .5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* USER LOGADO */
-.me {
-    border-left: 3px solid var(--green);
-    background: rgba(34,197,94,0.08) !important;
-}
-
-/* AVATAR */
-.avatar {
-    width: 40px;
-    height: 40px;
+/* CONFIGURAÇÃO DOS AVATARES DO PODIO */
+.avatar-podio {
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--stroke);
+    display: inline-block;
+    margin: 0 auto;
 }
 
-/* TOP COLORS */
-.gold { border: 3px solid var(--gold); }
-.silver { border: 3px solid var(--silver); }
-.bronze { border: 3px solid var(--bronze); }
+.avatar-placeholder-podio {
+    background-color: var(--input-border);
+    color: var(--texto-secundario);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
 
-/* TABLE */
+/* BORDAS EXCLUSIVAS DO TOP 3 */
+.gold { 
+    border: 3px solid #ffd700 !important; 
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+.silver { 
+    border: 3px solid #c0c0c0 !important; 
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
+}
+.bronze { 
+    border: 3px solid #cd7f32 !important; 
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.15);
+}
+
+/* TABELA REESTILIZADA */
 .table-dark {
     --bs-table-bg: transparent;
+    --bs-table-hover-bg: #19233c;
+    border-color: var(--input-border);
 }
 
-.table tr {
-    transition: .2s;
+.table thead th {
+    color: var(--texto-secundario) !important;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--input-border);
+    padding: 14px 10px;
 }
 
-.table tr:hover {
-    background: rgba(255,255,255,0.04);
+.table tbody tr {
+    border-bottom: 1px solid rgba(35, 45, 69, 0.5);
+    transition: background-color 0.2s;
 }
 
-/* BADGE POSIÇÃO */
+/* BADGE DA POSIÇÃO */
 .pos {
-    font-weight: 800;
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+/* AVATAR DENTRO DA TABELA */
+.avatar-table {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--input-border);
+}
+
+.avatar-placeholder-table {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: var(--input-border);
+    color: var(--texto-secundario);
+    font-size: 0.75rem;
+    font-weight: 700;
+}
+
+/* LINHA DO USUÁRIO LOGADO (.me) */
+.table tbody tr.me {
+    border-left: 4px solid var(--verde-chute);
+    background-color: rgba(61, 180, 109, 0.1) !important;
+}
+
+.table tbody tr.me td {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.text-verde {
+    color: var(--verde-chute) !important;
+}
+
+.text-custom-secondary {
+    color: var(--texto-secundario);
 }
 </style>
 
 <div class="container py-4">
 
-    <!-- HEADER -->
-    <div class="text-center mb-4">
-        <h2 class="title"> RANKING DO BOLÃO 2026</h2>
-        <small class="text-secondary">Classificação geral do bolão</small>
+    <div class="text-center mb-4 mt-2">
+        <h2 class="title mb-1">RANKING DO BOLÃO 2026</h2>
+        <small class="text-custom-secondary fw-medium">Classificação geral em tempo real</small>
     </div>
 
-    <!-- TOP 3 -->
     <div class="ranking-box mb-4">
-        <h5 class="mb-3">Top 3 do Ranking</h5>
+        <h5 class="fw-semibold text-white mb-4" style="font-size: 1.1rem;">Top 3 do Ranking</h5>
 
-        <div class="row text-center align-items-end">
+        <div class="row text-center align-items-end g-2">
 
-            <!-- 2º -->
             <div class="col-4 top-anim">
                 {% if ranking|length > 1 %}
                 {% with p=ranking.1 %}
 
                     {% if p.user.profile.image %}
-                        <img class="avatar silver" src="{{ p.user.profile.image.url }}" style="width:75px;height:75px;">
+                        <img class="avatar-podio silver" src="{{ p.user.profile.image.url }}" style="width:75px; height:75px;">
                     {% else %}
-                        <img class="avatar silver" src="https://via.placeholder.com/80" style="width:75px;height:75px;">
+                        <div class="avatar-placeholder-podio silver" style="width:75px; height:75px; font-size: 1.4rem;">
+                            <i class="bi bi-person"></i>
+                        </div>
                     {% endif %}
 
-                    <div class="fw-bold mt-2">🥈 {{ p.user.first_name|default:p.user.username }}</div>
-                    <small class="text-secondary">{{ p.pontuacao_total }} pts</small>
+                    <div class="fw-semibold text-white text-truncate px-1 mt-2">🥈 {{ p.user.first_name|default:p.user.username }}</div>
+                    <small class="text-custom-secondary">{{ p.pontuacao_total }} pts</small>
 
                 {% endwith %}
+                {% else %}
+                    <div class="text-muted small py-3">Aguardando...</div>
                 {% endif %}
             </div>
 
-            <!-- 1º -->
             <div class="col-4 top-anim">
                 {% if ranking|length > 0 %}
                 {% with p=ranking.0 %}
 
                     {% if p.user.profile.image %}
-                        <img class="avatar gold" src="{{ p.user.profile.image.url }}" style="width:95px;height:95px;">
+                        <img class="avatar-podio gold" src="{{ p.user.profile.image.url }}" style="width:95px; height:95px;">
                     {% else %}
-                        <img class="avatar gold" src="https://via.placeholder.com/100" style="width:95px;height:95px;">
+                        <div class="avatar-placeholder-podio gold" style="width:95px; height:95px; font-size: 1.8rem;">
+                            <i class="bi bi-trophy-fill text-warning"></i>
+                        </div>
                     {% endif %}
 
-                    <div class="fw-bold mt-2">👑 {{ p.user.first_name|default:p.user.username }}</div>
-                    <div style="color: var(--gold); font-weight:800;">
+                    <div class="fw-bold text-white text-truncate px-1 mt-2" style="font-size: 1.05rem;">👑 {{ p.user.first_name|default:p.user.username }}</div>
+                    <div class="text-verde fw-black fs-5">
                         {{ p.pontuacao_total }} pts
                     </div>
 
                 {% endwith %}
+                {% else %}
+                    <div class="text-muted small py-3">Aguardando...</div>
                 {% endif %}
             </div>
 
-            <!-- 3º -->
             <div class="col-4 top-anim">
                 {% if ranking|length > 2 %}
                 {% with p=ranking.2 %}
 
                     {% if p.user.profile.image %}
-                        <img class="avatar bronze" src="{{ p.user.profile.image.url }}" style="width:75px;height:75px;">
+                        <img class="avatar-podio bronze" src="{{ p.user.profile.image.url }}" style="width:75px; height:75px;">
                     {% else %}
-                        <img class="avatar bronze" src="https://via.placeholder.com/80" style="width:75px;height:75px;">
+                        <div class="avatar-placeholder-podio bronze" style="width:75px; height:75px; font-size: 1.4rem;">
+                            <i class="bi bi-person"></i>
+                        </div>
                     {% endif %}
 
-                    <div class="fw-bold mt-2">🥉 {{ p.user.first_name|default:p.user.username }}</div>
-                    <small class="text-secondary">{{ p.pontuacao_total }} pts</small>
+                    <div class="fw-semibold text-white text-truncate px-1 mt-2">🥉 {{ p.user.first_name|default:p.user.username }}</div>
+                    <small class="text-custom-secondary">{{ p.pontuacao_total }} pts</small>
 
                 {% endwith %}
+                {% else %}
+                    <div class="text-muted small py-3">Aguardando...</div>
                 {% endif %}
             </div>
 
         </div>
     </div>
 
-    <!-- RANKING GERAL -->
     <div class="ranking-box">
+        
+        <div class="table-responsive">
+            <table class="table table-dark table-hover align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th style="width: 90px;">Pos</th>
+                        <th>Jogador</th>
+                        <th class="text-end" style="width: 140px;">Pontos</th>
+                    </tr>
+                </thead>
+                <tbody>
 
-        <table class="table table-dark align-middle">
+                {% for p in ranking %}
+                    <tr class="{% if p.user == request.user %}me{% endif %}">
 
-            <thead>
-                <tr class="text-secondary">
-                    <th>Pos</th>
-                    <th>Jogador</th>
-                    <th class="text-end">Pontos</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-            {% for p in ranking %}
-
-                <tr class="{% if p.user == request.user %}me{% endif %}">
-
-                    <!-- POSIÇÃO -->
-                    <td class="pos">
-                        {% if forloop.counter == 1 %}
-                            🥇 1º
-                        {% elif forloop.counter == 2 %}
-                            🥈 2º
-                        {% elif forloop.counter == 3 %}
-                            🥉 3º
-                        {% else %}
-                            {{ forloop.counter }}º
-                        {% endif %}
-                    </td>
-
-                    <!-- USER -->
-                    <td>
-                        <div class="d-flex align-items-center gap-2">
-
-                            {% if p.user.profile.image %}
-                                <img src="{{ p.user.profile.image.url }}" class="avatar">
+                        <td class="pos">
+                            {% if forloop.counter == 1 %}
+                                <span class="text-warning">🥇 1º</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="text-light">🥈 2º</span>
+                            {% elif forloop.counter == 3 %}
+                                <span style="color: #cd7f32;">🥉 3º</span>
                             {% else %}
-                                <div class="avatar d-flex align-items-center justify-content-center bg-secondary text-dark fw-bold">
-                                    {{ p.user.username|slice:":2"|upper }}
-                                </div>
+                                <span class="text-custom-secondary ps-1">{{ forloop.counter }}º</span>
                             {% endif %}
+                        </td>
 
-                            <div class="fw-semibold">
-                                {{ p.user.first_name|default:p.user.username }}
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                {% if p.user.profile.image %}
+                                    <img src="{{ p.user.profile.image.url }}" class="avatar-table">
+                                {% else %}
+                                    <div class="avatar-placeholder-table d-flex align-items-center justify-content-center">
+                                        {{ p.user.username|slice:":2"|upper }}
+                                    </div>
+                                {% endif %}
+                                <span class="fw-medium">{{ p.user.first_name|default:p.user.username }}</span>
                             </div>
+                        </td>
 
-                        </div>
-                    </td>
+                        <td class="text-end fw-bold text-verde">
+                            {{ p.pontuacao_total }} pts
+                        </td>
 
-                    <!-- PONTOS -->
-                    <td class="text-end fw-bold" style="color: var(--gold);">
-                        {{ p.pontuacao_total }} pts
-                    </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">
+                            Nenhum jogador no ranking ainda.
+                        </td>
+                    </tr>
+                {% endfor %}
 
-                </tr>
-
-            {% empty %}
-
-                <tr>
-                    <td colspan="3" class="text-center text-muted py-4">
-                        Nenhum jogador no ranking ainda
-                    </td>
-                </tr>
-
-            {% endfor %}
-
-            </tbody>
-
-        </table>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 </div>

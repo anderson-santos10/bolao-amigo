@@ -7,31 +7,26 @@
 
 <style>
 :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --card-2: #111827;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
+    --bg-principal: #091124;
+    --bg-card: #141c2f;
+    --verde-chute: #3db46d;
+    --input-border: #232d45;
+    --texto-secundario: #7e8a9c;
 }
 
-/* BACKGROUND */
-body {
-    background: var(--bg);
-    color: var(--text);
-}
-
-/* CARDS */
+/* CARDS PADRONIZADOS */
 .card-box {
-    background: linear-gradient(145deg, var(--card), var(--card-2));
-    border-radius: 16px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.06);
+    background-color: var(--bg-card);
+    border: 1px solid #1f2b48;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* ANIMAÇÃO TOP 3 */
+/* ANIMAÇÃO SOFT DO TOP 3 */
 @keyframes pop {
     from {
-        transform: translateY(10px) scale(0.9);
+        transform: translateY(15px) scale(0.95);
         opacity: 0;
     }
     to {
@@ -41,131 +36,196 @@ body {
 }
 
 .pop {
-    animation: pop .5s ease;
+    animation: pop 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* TOP USER */
+/* CONTAINER DOS USUÁRIOS NO PÓDIO */
 .top-user {
     text-align: center;
+    position: relative;
+    padding-bottom: 10px;
 }
 
-.top-user img {
-    width: 70px;
-    height: 70px;
+.top-user img, .top-user .avatar-placeholder {
+    width: 75px;
+    height: 75px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid rgba(255,255,255,0.1);
+    margin: 0 auto;
+    display: block;
 }
 
-/* POSIÇÕES */
+/* CASO O USUÁRIO NÃO TENHA FOTO */
+.top-user .avatar-placeholder {
+    background-color: #19233c;
+    color: var(--texto-secundario);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    border: 2px solid var(--input-border);
+}
+
+/* BORDAS DO PÓDIO */
 .gold {
-    border: 3px solid gold !important;
+    border: 3px solid #ffd700 !important;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.25);
 }
 
 .silver {
-    border: 3px solid silver !important;
+    border: 3px solid #c0c0c0 !important;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.2);
 }
 
 .bronze {
     border: 3px solid #cd7f32 !important;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.2);
 }
 
-/* TOP 1 MAIOR */
-.top-1 img {
-    width: 95px;
-    height: 95px;
+/* DESTAQUE DO 1º LUGAR */
+.top-1 img, .top-1 .avatar-placeholder {
+    width: 100px !important;
+    height: 100px !important;
 }
 
-/* TEXTO */
+/* TEXTOS DO PÓDIO */
 .top-name {
-    font-weight: 700;
-    margin-top: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-top: 12px;
+    color: #ffffff;
 }
 
 .top-points {
-    color: var(--muted);
+    color: var(--texto-secundario);
     font-size: 13px;
+    font-weight: 500;
 }
 
-/* TABLE */
+/* REFINAMENTO DO ALINHAMENTO DO PÓDIO */
+.podium-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+/* TABELA DE RANKING ATUALIZADA */
 .table-dark {
     --bs-table-bg: transparent;
+    --bs-table-hover-bg: #19233c;
+    border-color: var(--input-border);
 }
 
-.rank-row:hover {
-    background: rgba(255,255,255,0.05);
+.table thead th {
+    color: var(--texto-secundario) !important;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--input-border);
+    padding: 14px 10px;
 }
 
-/* USER LOGADO */
-.me {
-    border-left: 3px solid #22c55e;
-    background: rgba(34,197,94,0.08) !important;
+.table tbody tr {
+    border-bottom: 1px solid rgba(35, 45, 69, 0.4);
+    transition: background-color 0.2s;
+}
+
+/* DESTAQUE DO USUÁRIO LOGADO (.me) */
+.table tbody tr.me {
+    border-left: 4px solid var(--verde-chute);
+    background-color: rgba(61, 180, 109, 0.08) !important;
+}
+
+.table tbody tr.me td {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.text-verde {
+    color: var(--verde-chute);
+}
+
+.text-custom-secondary {
+    color: var(--texto-secundario);
 }
 </style>
 
 <div class="container py-4">
 
-    <div class="mb-4">
-        <h2 class="fw-bold">🏆 DASHBOARD</h2>
-        <small class="text-secondary">Ranking geral do bolão</small>
+    <!-- HEADER -->
+    <div class="mb-5 text-center text-md-start">
+        <h2 class="fw-black text-white mb-1">🏆 DASHBOARD</h2>
+        <p class="text-custom-secondary mb-0 small fw-medium">Acompanhe a classificação e a liderança em tempo real</p>
     </div>
 
-    <!-- TOP 3 -->
+    <!-- SEÇÃO DO PÓDIO TOP 3 -->
     <div class="card-box mb-4">
-        <h5 class="mb-4">Top 3 do Ranking</h5>
+        <h5 class="fw-bold text-white mb-4" style="font-size: 1.1rem; letter-spacing: 0.5px;">LÍDERES DA COMPETIÇÃO</h5>
 
-        <div class="row align-items-end text-center">
+        <div class="row podium-container g-2">
 
-            <!-- 2º -->
+            <!-- 2º LUGAR -->
             <div class="col-4 top-user pop">
                 {% with user=ranking.1 %}
                 {% if user %}
-
-                    {% if user.user.profile.image %}
-                        <img class="silver" src="{{ user.user.profile.image.url }}">
-                    {% else %}
-                        <img class="silver" src="https://via.placeholder.com/80">
-                    {% endif %}
-
-                    <div class="top-name">🥈 {{ user.user.first_name|default:user.user.username }}</div>
+                    <div class="position-relative d-inline-block">
+                        {% if user.user.profile.image %}
+                            <img class="silver" src="{{ user.user.profile.image.url }}" alt="2º Lugar">
+                        {% else %}
+                            <div class="avatar-placeholder silver"><i class="bi bi-person-fill"></i></div>
+                        {% endif %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-secondary border border-dark" style="padding: 6px 10px; font-size: 0.75rem;">2</span>
+                    </div>
+                    <div class="top-name text-truncate px-1">
+                        <i class="bi bi-star-fill text-secondary small me-1"></i>{{ user.user.first_name|default:user.user.username }}
+                    </div>
                     <div class="top-points">{{ user.pontuacao_total }} pts</div>
-
+                {% else %}
+                    <div class="text-muted small py-4 fw-medium">Aguardando...</div>
                 {% endif %}
                 {% endwith %}
             </div>
 
-            <!-- 1º -->
-            <div class="col-4 top-user pop">
+            <!-- 1º LUGAR (CENTRALIZADO E MAIOR) -->
+            <div class="col-4 top-user pop top-1">
                 {% with user=ranking.0 %}
                 {% if user %}
-
-                    {% if user.user.profile.image %}
-                        <img class="gold top-1" src="{{ user.user.profile.image.url }}">
-                    {% else %}
-                        <img class="gold top-1" src="https://via.placeholder.com/100">
-                    {% endif %}
-
-                    <div class="top-name">👑 {{ user.user.first_name|default:user.user.username }}</div>
-                    <div class="text-warning fw-bold">{{ user.pontuacao_total }} pts</div>
-
+                    <div class="position-relative d-inline-block">
+                        {% if user.user.profile.image %}
+                            <img class="gold" src="{{ user.user.profile.image.url }}" alt="1º Lugar">
+                        {% else %}
+                            <div class="avatar-placeholder gold"><i class="bi bi-trophy-fill text-warning"></i></div>
+                        {% endif %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle bg-warning text-dark border border-dark fw-bold" style="padding: 7px 11px; font-size: 0.85rem; box-shadow: 0 0 10px rgba(255,215,0,0.4);">1</span>
+                    </div>
+                    <div class="top-name text-truncate px-1" style="font-size: 1.05rem; font-weight: 800;">
+                        <span class="text-warning">👑</span> {{ user.user.first_name|default:user.user.username }}
+                    </div>
+                    <div class="text-verde fw-black fs-5 mt-1">{{ user.pontuacao_total }} <span style="font-size: 0.8rem; font-weight:700;">PTS</span></div>
+                {% else %}
+                    <div class="text-muted small py-4 fw-medium">Aguardando...</div>
                 {% endif %}
                 {% endwith %}
             </div>
 
-            <!-- 3º -->
+            <!-- 3º LUGAR -->
             <div class="col-4 top-user pop">
                 {% with user=ranking.2 %}
                 {% if user %}
-
-                    {% if user.user.profile.image %}
-                        <img class="bronze" src="{{ user.user.profile.image.url }}">
-                    {% else %}
-                        <img class="bronze" src="https://via.placeholder.com/80">
-                    {% endif %}
-
-                    <div class="top-name">🥉 {{ user.user.first_name|default:user.user.username }}</div>
+                    <div class="position-relative d-inline-block">
+                        {% if user.user.profile.image %}
+                            <img class="bronze" src="{{ user.user.profile.image.url }}" alt="3º Lugar">
+                        {% else %}
+                            <div class="avatar-placeholder bronze"><i class="bi bi-person-fill"></i></div>
+                        {% endif %}
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-circle border border-dark" style="background-color: #cd7f32; padding: 6px 10px; font-size: 0.75rem;">3</span>
+                    </div>
+                    <div class="top-name text-truncate px-1">
+                        <i class="bi bi-star-fill small me-1" style="color: #cd7f32;"></i>{{ user.user.first_name|default:user.user.username }}
+                    </div>
                     <div class="top-points">{{ user.pontuacao_total }} pts</div>
-
+                {% else %}
+                    <div class="text-muted small py-4 fw-medium">Aguardando...</div>
                 {% endif %}
                 {% endwith %}
             </div>
@@ -173,49 +233,71 @@ body {
         </div>
     </div>
 
-    <!-- RANKING GERAL -->
+    <!-- SEÇÃO DA TABELA COMPLETA -->
     <div class="card-box">
-        <h5 class="mb-3">Ranking Geral</h5>
+        <h5 class="fw-bold text-white mb-3" style="font-size: 1.1rem; letter-spacing: 0.5px;">RANKING GERAL</h5>
 
         <div class="table-responsive">
-
-            <table class="table table-dark table-hover align-middle">
-
+            <table class="table table-dark table-hover align-middle mb-0">
                 <thead>
-                    <tr class="text-muted">
-                        <th>#</th>
-                        <th>Usuário</th>
-                        <th class="text-end">Pontos</th>
+                    <tr>
+                        <th style="width: 90px;" class="ps-3">Posição</th>
+                        <th>Competidor</th>
+                        <th class="text-end pe-3" style="width: 160px;">Pontuação</th>
                     </tr>
                 </thead>
-
                 <tbody>
 
                 {% for p in ranking %}
-
                     <tr class="{% if p.user == request.user %}me{% endif %}">
-                        <td>{{ forloop.counter }}º</td>
-
-                        <td>
-                            {% if p.user.profile.image %}
-                                <img src="{{ p.user.profile.image.url }}"
-                                     style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;">
+                        <!-- POSIÇÃO -->
+                        <td class="fw-bold ps-3" style="font-size: 0.95rem;">
+                            {% if forloop.counter == 1 %}
+                                <span class="text-warning">1º</span>
+                            {% elif forloop.counter == 2 %}
+                                <span class="text-secondary">2º</span>
+                            {% elif forloop.counter == 3 %}
+                                <span style="color: #cd7f32;">3º</span>
+                            {% else %}
+                                {{ forloop.counter }}º
                             {% endif %}
-
-                            {{ p.user.first_name|default:p.user.username }}
                         </td>
 
-                        <td class="text-end fw-bold">
-                            {{ p.pontuacao_total }} pts
+                        <!-- USER DATA -->
+                        <td>
+                            <div class="d-flex align-items-center">
+                                {% if p.user.profile.image %}
+                                    <img src="{{ p.user.profile.image.url }}"
+                                         style="width:36px; height:36px; border-radius:50%; object-fit:cover; margin-right:12px; border: 1.5px solid var(--input-border);">
+                                {% else %}
+                                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle" 
+                                         style="width:36px; height:36px; font-size:0.9rem; margin-right:12px; background-color: #19233c; border: 1.5px solid var(--input-border); color: var(--texto-secundario);">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                {% endif %}
+                                <span class="fw-medium">{{ p.user.first_name|default:p.user.username }}</span>
+                                {% if p.user == request.user %}
+                                    <span class="badge ms-2 bg-success bg-opacity-25 text-success border border-success border-opacity-25" style="font-size: 0.7rem; font-weight: 700; padding: 3px 7px;">VOCÊ</span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <!-- PONTOS -->
+                        <td class="text-end fw-bold text-verde pe-3" style="font-size: 1rem;">
+                            {{ p.pontuacao_total }} <span class="text-custom-secondary fw-medium" style="font-size: 0.8rem;">pts</span>
                         </td>
                     </tr>
-
+                {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center text-custom-secondary py-5 small fw-medium">
+                            <i class="bi bi-emoji-expressionless d-block fs-2 mb-2"></i>
+                            Nenhum usuário pontuou ainda nesta liga.<br>Os resultados aparecerão assim que as partidas forem encerradas!
+                        </td>
+                    </tr>
                 {% endfor %}
 
                 </tbody>
-
             </table>
-
         </div>
     </div>
 

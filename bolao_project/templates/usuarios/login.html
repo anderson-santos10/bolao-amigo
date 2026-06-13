@@ -7,166 +7,268 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Chute Certo</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        :root {
+            --bg-principal: #091124;
+            --bg-card-login: #141c2f;
+            --verde-chute: #3db46d;
+            --input-border: #232d45;
+            --input-bg: #192239;
+            --texto-secundario: #7e8a9c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-principal);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Container principal arredondado com a borda sutil da imagem */
+        .main-card {
+            background-color: var(--bg-principal);
+            border: 1px solid #16223f;
+            border-radius: 24px;
+            overflow: hidden;
+            max-width: 1300px;
+            width: 100%;
+        }
+
+        /* Lado esquerdo com a imagem de fundo */
+        .bg-login-image {
+            background-image: url("{% static 'img/img_login.png' %}");
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        /* Cores customizadas dos textos */
+        .text-verde {
+            color: var(--verde-chute);
+        }
+        .text-custom-secondary {
+            color: var(--texto-secundario);
+        }
+
+        /* Estilização interna dos cards de inputs */
+        .login-box {
+            background-color: var(--bg-card-login);
+            border: 1px solid #1f2b48;
+            border-radius: 20px;
+            padding: 2.5rem !important;
+        }
+
+        /* Customização dos Inputs (Ícone dentro do campo) */
+        .input-container {
+            position: relative;
+        }
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--texto-secundario);
+            font-size: 1.1rem;
+        }
+        .input-container .form-control {
+            background-color: var(--input-bg);
+            border: 1px solid var(--input-border);
+            color: #ffffff;
+            padding-left: 45px;
+            height: 50px;
+            border-radius: 8px;
+        }
+        .input-container .form-control:focus {
+            background-color: var(--input-bg);
+            border-color: var(--verde-chute);
+            box-shadow: none;
+            color: #ffffff;
+        }
+        .input-container .btn-eye {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--texto-secundario);
+            padding: 0;
+        }
+
+        /* Botões */
+        .btn-entrar {
+            background-color: var(--verde-chute);
+            border: none;
+            color: #ffffff;
+            height: 50px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        .btn-entrar:hover {
+            background-color: #349e5f;
+            color: #ffffff;
+        }
+
+        .btn-criar-conta {
+            background-color: transparent;
+            border: 1px solid var(--input-border);
+            color: #ffffff;
+            height: 50px;
+            font-weight: 500;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .btn-criar-conta:hover {
+            background-color: #1c2844;
+            color: #ffffff;
+            border-color: var(--texto-secundario);
+        }
+
+        /* Divisor "ou" */
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: var(--texto-secundario);
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--input-border);
+        }
+        .divider:not(:empty)::before { margin-right: .75em; }
+        .divider:not(:empty)::after { margin-left: .75em; }
+
+        /* Ajustes de links secundários */
+        .link-forgot {
+            color: var(--verde-chute);
+            font-size: 0.9rem;
+            text-decoration: none;
+        }
+        .link-forgot:hover {
+            text-decoration: underline;
+        }
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--texto-secundario);
+            line-height: 1.5;
+        }
+        .footer-text a {
+            color: var(--verde-chute);
+            text-decoration: none;
+        }
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-<body class="bg-dark">
+<body>
 
-<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center py-5">
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center p-3 p-md-5">
 
-    <div class="card bg-dark border-secondary shadow-lg w-100" style="max-width:1400px;">
+    <div class="main-card shadow-lg">
         <div class="row g-0">
 
-            <!-- LADO ESQUERDO -->
-            <div class="col-lg-6 p-5 text-white d-flex flex-column justify-content-center">
-
-                <h1 class="display-3 fw-bold">
-                    Aposte seus conhecimentos.
-                </h1>
-
-                <h2 class="display-4 fw-bold text-success mb-5">
-                    Ganhe prêmios!
-                </h2>
-
-                <div class="mb-4">
-                    <div class="d-flex align-items-start mb-4">
-                        <i class="bi bi-trophy fs-1 text-success me-3"></i>
-
-                        <div>
-                            <h4 class="fw-bold mb-1">Vários jogos</h4>
-                            <p class="text-secondary mb-0">
-                                Escolha seu jogo favorito
-                            </p>
-                        </div>
+            <div class="col-lg-6 p-4 p-md-5 d-flex flex-column justify-content-between bg-login-image min-vh-50">
+                <div class="d-none d-lg-block">
                     </div>
-
-                    <div class="d-flex align-items-start mb-4">
-                        <i class="bi bi-gift fs-1 text-success me-3"></i>
-
-                        <div>
-                            <h4 class="fw-bold mb-1">Prêmios incríveis</h4>
-                            <p class="text-secondary mb-0">
-                                Concorra a prêmios reais
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="d-flex align-items-start">
-                        <i class="bi bi-shield-check fs-1 text-success me-3"></i>
-
-                        <div>
-                            <h4 class="fw-bold mb-1">100% seguro</h4>
-                            <p class="text-secondary mb-0">
-                                Seus dados protegidos
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-5 text-center">
-                    <div class="display-1">
-                        ⚽ 🏆 🎁
-                    </div>
-                </div>
-
             </div>
 
-            <!-- LADO DIREITO -->
-            <div class="col-lg-6 p-5">
-
-                <div class="card bg-black border-secondary shadow-sm">
-                    <div class="card-body p-5">
-
-                        <div class="text-center mb-5">
-                            <h2 class="fw-bold text-success">
-                                ⚽ CHUTE CERTO
-                            </h2>
-
-                            <h3 class="mt-4 fw-bold text-white">
-                                Bem-vindo de volta!
-                            </h3>
-
-                            <p class="text-secondary">
-                                Faça login para continuar
-                            </p>
+            <div class="col-lg-6 p-4 p-md-5 d-flex align-items-center justify-content-center">
+                
+                <div class="login-box w-100">
+                    
+                    <div class="text-center mb-4">
+                        <div class="mb-3">
+                            <span class="fs-3 fw-bold tracking-wide">⚽ CHUTE<span class="text-verde">-CERTO</span></span>
                         </div>
 
-                        <form method="post">
-                            {% csrf_token %}
+                        <h3 class="fw-bold text-white mb-1" style="font-size: 1.6rem;">
+                            Bem-vindo de volta!
+                        </h3>
+                        <p class="text-custom-secondary small">
+                            Faça login para continuar
+                        </p>
+                    </div>
 
-                            <div class="mb-3">
-                                <label class="form-label text-white">
-                                    E-mail
-                                </label>
+                    <form method="post">
+                        {% csrf_token %}
 
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-envelope"></i>
-                                    </span>
-
-                                    <input
-                                        type="email"
-                                        class="form-control"
-                                        name="email"
-                                        placeholder="Digite seu e-mail"
-                                    >
-                                </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-white-50 mb-2">E-mail</label>
+                            <div class="input-container">
+                                <i class="bi bi-envelope"></i>
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    name="email"
+                                    placeholder="Digite seu e-mail"
+                                    required
+                                >
                             </div>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label text-white">
-                                    Senha
-                                </label>
-
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-lock"></i>
-                                    </span>
-
-                                    <input
-                                        type="password"
-                                        class="form-control"
-                                        name="password"
-                                        placeholder="Digite sua senha"
-                                    >
-                                </div>
-                            </div>
-
-                            <div class="text-end mb-4">
-                                <a href="#" class="text-success text-decoration-none">
-                                    Esqueceu sua senha?
-                                </a>
-                            </div>
-
-                            <div class="d-grid mb-4">
-                                <button class="btn btn-success btn-lg">
-                                    Entrar
+                        <div class="mb-2">
+                            <label class="form-label small text-white-50 mb-2">Senha</label>
+                            <div class="input-container">
+                                <i class="bi bi-lock"></i>
+                                <input
+                                    type="password"
+                                    class="form-control"
+                                    name="password"
+                                    placeholder="Digite sua senha"
+                                    required
+                                >
+                                <button type="button" class="btn-eye">
+                                    <i class="bi bi-eye" style="position: static; transform: none;"></i>
                                 </button>
                             </div>
-
-                            <div class="text-center text-secondary mb-3">
-                                ou
-                            </div>
-
-                            <div class="d-grid">
-                                <a href="{% url 'cadastro' %}"
-                                   class="btn btn-outline-success btn-lg">
-                                    Criar uma conta
-                                </a>
-                            </div>
-
-                        </form>
-
-                        <div class="text-center mt-4">
-                            <small class="text-secondary">
-                                Ao continuar, você concorda com nossos
-                                <a href="#" class="text-success">Termos de Uso</a>
-                                e
-                                <a href="#" class="text-success">Política de Privacidade</a>
-                            </small>
                         </div>
 
+                        <div class="text-end mb-4">
+                            <a href="#" class="link-forgot">
+                                Esqueceu sua senha?
+                            </a>
+                        </div>
+
+                        <div class="d-grid mb-2">
+                            <button type="submit" class="btn btn-entrar">
+                                Entrar
+                            </button>
+                        </div>
+
+                        <div class="divider">ou</div>
+
+                        <div class="d-grid mb-4">
+                            <a href="{% url 'cadastro' %}" class="btn btn-criar-conta">
+                                <i class="bi bi-person-add"></i> Criar uma conta
+                            </a>
+                        </div>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <p class="footer-text mb-0">
+                            Ao continuar, você concorda com nossos<br>
+                            <a href="#">Termos de Uso</a> e <a href="#">Política de Privacidade</a>
+                        </p>
                     </div>
+
                 </div>
 
             </div>
@@ -176,6 +278,6 @@
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
