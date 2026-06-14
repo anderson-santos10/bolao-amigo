@@ -20,6 +20,10 @@
             --input-border: #232d45;
             --input-bg: #192239;
             --texto-secundario: #7e8a9c;
+            
+            /* Variáveis de controle do Sidebar Dinâmico */
+            --sidebar-width-collapsed: 78px;
+            --sidebar-width-expanded: 260px;
         }
 
         body {
@@ -30,51 +34,110 @@
             overflow-x: hidden;
         }
 
-        /* SIDEBAR SISTEMA DESKTOP */
+        /* CONTAINER MASTER DO LAYOUT */
+        .wrapper {
+            display: flex;
+            width: 100%;
+            align-items: stretch;
+        }
+
+        /* ESTRUTURA DA SIDEBAR PARA DESKTOP */
         .sidebar {
             background-color: var(--bg-card);
             border-right: 1px solid var(--input-border);
-            padding: 24px 16px;
-            z-index: 100;
+            padding: 24px 14px;
+            z-index: 1040;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width-collapsed);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* Efeito de abertura ao passar o mouse (Apenas telas Desktop) */
         @media (min-width: 768px) {
-            .sidebar {
-                position: sticky;
-                top: 0;
-                height: 100vh;
+            .sidebar:hover {
+                width: var(--sidebar-width-expanded);
+                box-shadow: 10px 0 30px rgba(0, 0, 0, 0.4);
+            }
+            
+            /* Ajuste dinâmico do conteúdo para não sumir atrás da barra */
+            .main-content {
+                margin-left: var(--sidebar-width-collapsed);
+                width: calc(100% - var(--sidebar-width-collapsed));
+                padding: 40px;
+                transition: all 0.3s ease;
             }
         }
 
-        .main-content {
-            padding: 32px;
+        /* BRAND / LOGOTIPO */
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding-left: 10px;
+            white-space: nowrap;
+        }
+        
+        .sidebar-brand h4 {
+            font-size: 1.15rem;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            margin: 0;
+            transition: opacity 0.2s ease;
+            opacity: 0; /* Oculto quando fechado */
+        }
+        
+        .sidebar:hover .sidebar-brand h4 {
+            opacity: 1; /* Exibe no hover */
         }
 
-        /* CAIXA DE USUÁRIO */
+        /* CAIXA DE USUÁRIO OTINIZADA */
         .user-box {
             background-color: var(--input-bg);
             border: 1px solid var(--input-border);
-            padding: 14px;
+            padding: 10px;
             border-radius: 12px;
             margin-bottom: 24px;
             display: flex;
             gap: 12px;
             align-items: center;
+            white-space: nowrap;
+            overflow: hidden;
+            transition: padding 0.3s ease;
+        }
+
+        .sidebar:hover .user-box {
+            padding: 14px;
+        }
+
+        .user-info-text {
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .sidebar:hover .user-info-text {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* AVATARES */
-        .avatar {
-            width: 42px;
-            height: 42px;
+        .avatar, .avatar-fallback {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--input-border);
+            flex-shrink: 0;
         }
 
         .avatar-fallback {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
             background-color: var(--input-border);
             color: var(--texto-secundario);
             display: flex;
@@ -82,14 +145,12 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.85rem;
-            flex-shrink: 0;
         }
 
-        /* LINKS DO MENU */
+        /* LINKS DO MENU (Efeito de transição de texto) */
         .menu-link {
             display: flex;
             align-items: center;
-            gap: 12px;
             padding: 12px 14px;
             color: var(--texto-secundario);
             text-decoration: none;
@@ -98,10 +159,24 @@
             border-radius: 10px;
             transition: all 0.2s ease;
             margin-bottom: 6px;
+            white-space: nowrap;
         }
 
         .menu-link i {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
+            min-width: 24px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .menu-text {
+            margin-left: 12px;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+        }
+
+        .sidebar:hover .menu-text {
+            opacity: 1;
         }
 
         .menu-link:hover {
@@ -110,9 +185,9 @@
         }
 
         .menu-link.active {
-            border-left: 4px solid var(--verde-chute);
             background-color: rgba(61, 180, 109, 0.1);
             color: var(--verde-chute);
+            box-shadow: inset 3px 0 0 var(--verde-chute);
         }
 
         .hint {
@@ -146,15 +221,30 @@
             box-shadow: 0 0 8px rgba(61, 180, 109, 0.2) !important;
         }
 
-        /* RESPONSIVIDADE (MOBILE) */
+        /* COMPORTAMENTO PARA DISPOSITIVOS MÓVEIS (MOBILE) */
         @media (max-width: 767.98px) {
+            .wrapper {
+                flex-direction: column;
+            }
             .sidebar {
-                padding: 15px;
+                position: static;
+                width: 100% !important;
+                height: auto;
+                padding: 15px 20px;
                 border-right: none;
                 border-bottom: 1px solid var(--input-border);
             }
             .main-content {
-                padding: 24px 12px;
+                width: 100% !important;
+                margin-left: 0 !important;
+                padding: 24px 16px;
+            }
+            .sidebar-brand h4, .menu-text, .user-info-text {
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+            .menu-link i {
+                min-width: auto;
             }
             .user-box {
                 margin-top: 15px;
@@ -165,84 +255,94 @@
 </head>
 <body>
 
-<div class="container-fluid p-0">
-    <div class="row g-0">
+<div class="wrapper">
 
-        <div class="col-12 col-md-3 col-xl-2 sidebar">
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="sidebar">
+        
+        <!-- Topo da Sidebar -->
+        <div class="sidebar-brand">
+            <span class="fs-4">⚽</span>
+            <h4 class="text-white">BOLÃO FC</h4>
+            <!-- Botão Hamburguer exclusivo para Mobile -->
+            <button class="btn btn-outline-light d-md-none border-0 shadow-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+                <i class="bi bi-list fs-2"></i>
+            </button>
+        </div>
+
+        <!-- Menu Retrátil / Colapsável -->
+        <div class="collapse d-md-flex flex-column flex-grow-1" id="sidebarMenu">
             
-            <div class="d-flex justify-content-between align-items-center d-md-block">
-                <h4 class="fw-black m-0 text-white tracking-wide" style="letter-spacing: 0.5px;">⚽ BOLÃO FC</h4>
-                <button class="btn btn-outline-light d-md-none border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-                    <i class="bi bi-list fs-2"></i>
-                </button>
-            </div>
+            <!-- Painel do Usuário conectado -->
+            <div class="user-box">
+                {% if request.user.profile.image %}
+                    <img src="{{ request.user.profile.image.url }}" class="avatar" alt="Avatar">
+                {% else %}
+                    <div class="avatar-fallback">
+                        {{ request.user.username|slice:":2"|upper }}
+                    </div>
+                {% endif %}
 
-            <div class="collapse d-md-block" id="sidebarMenu">
-                
-                <div class="user-box">
-                    {% if request.user.profile.image %}
-                        <img src="{{ request.user.profile.image.url }}" class="avatar" alt="Avatar">
-                    {% else %}
-                        <div class="avatar-fallback">
-                            {{ request.user.username|slice:":2"|upper }}
-                        </div>
-                    {% endif %}
-
-                    <div class="text-truncate">
-                        <div class="fw-bold text-white text-truncate" style="font-size: 0.9rem;">
-                            {{ request.user.first_name|default:request.user.username }}
-                        </div>
-                        <small class="d-block text-truncate" style="color: var(--texto-secundario); font-size: 0.75rem;">
-                            {{ request.user.email|default:"Sem email" }}
-                        </small>
-                        <div class="d-flex align-items-center gap-1 mt-1" style="font-size: 0.7rem;">
-                            <span style="color: var(--verde-chute);">●</span> <span style="color: var(--texto-secundario)">Online</span>
-                        </div>
+                <div class="user-info-text text-truncate">
+                    <div class="fw-bold text-white text-truncate" style="font-size: 0.9rem;">
+                        {{ request.user.first_name|default:request.user.username }}
+                    </div>
+                    <small class="d-block text-truncate" style="color: var(--texto-secundario); font-size: 0.75rem;">
+                        {{ request.user.email|default:"Sem email" }}
+                    </small>
+                    <div class="d-flex align-items-center gap-1 mt-0.5" style="font-size: 0.7rem;">
+                        <span style="color: var(--verde-chute);">●</span> <span style="color: var(--texto-secundario)">Online</span>
                     </div>
                 </div>
+            </div>
 
-                <nav class="d-flex flex-column">
-                    <a class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
-                        <i class="bi bi-grid-1x2-fill"></i> Dashboard
-                    </a>
+            <!-- Navegação de Links -->
+            <nav class="d-flex flex-column flex-grow-1">
+                <a class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                    <i class="bi bi-grid-1x2-fill"></i><span class="menu-text">Dashboard</span>
+                </a>
 
-                    <a class="menu-link {% if request.resolver_match.url_name == 'fazer_palpites' %}active{% endif %}" href="{% url 'fazer_palpites' %}">
-                        <i class="bi bi-pencil-square"></i> Palpites
-                    </a>
-                    
-                    <a class="menu-link {% if request.resolver_match.url_name == 'meus_palpites' %}active{% endif %}" href="{% url 'meus_palpites' %}">
-                        <i class="bi bi-trophy-fill"></i> Meus Palpites
-                    </a>
+                <a class="menu-link {% if request.resolver_match.url_name == 'fazer_palpites' %}active{% endif %}" href="{% url 'fazer_palpites' %}">
+                    <i class="bi bi-pencil-square"></i><span class="menu-text">Palpites</span>
+                </a>
+                
+                <a class="menu-link {% if request.resolver_match.url_name == 'meus_palpites' %}active{% endif %}" href="{% url 'meus_palpites' %}">
+                    <i class="bi bi-trophy-fill"></i><span class="menu-text">Meus Palpites</span>
+                </a>
 
-                    <a class="menu-link {% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'ranking' %}">
-                        <i class="bi bi-bar-chart-line-fill"></i> Ranking
-                    </a>
+                <a class="menu-link {% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'ranking' %}">
+                    <i class="bi bi-bar-chart-line-fill"></i><span class="menu-text">Ranking</span>
+                </a>
 
-                    <a class="menu-link {% if request.resolver_match.url_name == 'regras_bolao' %}active{% endif %}" href="{% url 'regras_bolao' %}">
-                        <i class="bi bi-book-half"></i> Regras
-                    </a>
+                <a class="menu-link {% if request.resolver_match.url_name == 'regras_bolao' %}active{% endif %}" href="{% url 'regras_bolao' %}">
+                    <i class="bi bi-book-half"></i><span class="menu-text">Regras</span>
+                </a>
 
-                    <hr style="border-color: var(--input-border); margin: 15px 0; opacity: 0.6;">
+                <!-- Alinhando itens utilitários na parte inferior do menu -->
+                <div class="mt-auto">
+                    <hr style="border-color: var(--input-border); margin: 15px 0; opacity: 0.4;">
 
                     <a class="menu-link" href="#" data-bs-toggle="modal" data-bs-target="#settingsModal">
-                        <i class="bi bi-gear-fill"></i> Configurações
+                        <i class="bi bi-gear-fill"></i><span class="menu-text">Configurações</span>
                     </a>
 
                     <a class="menu-link text-danger" href="{% url 'logout' %}">
-                        <i class="bi bi-box-arrow-right"></i> Sair
+                        <i class="bi bi-box-arrow-right"></i><span class="menu-text">Sair</span>
                     </a>
-                </nav>
+                </div>
+            </nav>
 
-            </div>
         </div>
+    </aside>
 
-        <div class="col-12 col-md-9 col-xl-10 main-content">
-            {% block content %}{% endblock %}
-        </div>
+    <!-- CONTEÚDO PRINCIPAL (INJETADO PELOS TEMPLATES FILHOS) -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
 
-    </div>
 </div>
 
+<!-- MODAL DE CONFIGURAÇÕES -->
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-custom shadow-lg">
