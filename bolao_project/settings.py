@@ -3,15 +3,21 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # SECURITY
 SECRET_KEY = "django-insecure-95%=%7n40_=82!o=c9b#$s&4*kx$0sr0ofu%ipym21vq@ykq6i"
-DEBUG = True
+DEBUG = False
+
 ALLOWED_HOSTS = [
     ".railway.app",
     "localhost",
     "127.0.0.1"
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://bolao-amigo-production.up.railway.app",
+]
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # APPLICATIONS
@@ -23,11 +29,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # meus apps
     "usuarios.apps.UsuariosConfig",
-    'campeonatos'
+    "campeonatos",
 ]
-
 
 # MIDDLEWARE
 MIDDLEWARE = [
@@ -40,12 +44,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-
-# URL ROOT
 ROOT_URLCONF = "bolao_project.urls"
 
-
-# TEMPLATES
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -61,11 +61,8 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = "bolao_project.wsgi.application"
 
-
-# DATABASE
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -73,8 +70,6 @@ DATABASES = {
     }
 }
 
-
-# PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -82,31 +77,19 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
-# INTERNATIONALIZATION
 LANGUAGE_CODE = "pt-br"
 TIME_ZONE = "America/Sao_Paulo"
 USE_I18N = True
 USE_TZ = True
 
-
-# STATIC FILES
 STATIC_URL = "static/"
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-
-# MEDIA (IMPORTANTE pro upload de imagem)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-
-# LOGIN SYSTEM (🔥 ESSENCIAL - CORRIGE SEU ERRO)
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/login/"
 
-
-# DEFAULT AUTO FIELD
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
