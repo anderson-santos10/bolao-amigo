@@ -1,5 +1,16 @@
 asgiref==3.11.1
+cffi==2.0.0
+charset-normalizer==3.4.7
+cryptography==49.0.0
 Django==5.2.15
+et_xmlfile==2.0.0
+gunicorn==26.0.0
+openpyxl==3.1.5
+packaging==26.2
+pdfminer.six==20251230
+pdfplumber==0.11.9
+pillow==12.2.0
+pycparser==3.0
+pypdfium2==5.9.0
 sqlparse==0.5.5
 tzdata==2026.2
-Pillow==10.4.0
