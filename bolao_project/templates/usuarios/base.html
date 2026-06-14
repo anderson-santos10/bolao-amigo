@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Bolão FC{% endblock %}</title>
 
-    <!-- Google Fonts (Inter) & Bootstrap -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -28,23 +27,27 @@
             color: #ffffff;
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* SIDEBAR E NAVBAR RESPONSIVA */
+        /* SIDEBAR SISTEMA DESKTOP */
         .sidebar {
             background-color: var(--bg-card);
-            min-height: 100vh;
-            padding: 24px 16px;
             border-right: 1px solid var(--input-border);
-            position: fixed;
-            width: inherit;
-            max-width: inherit;
+            padding: 24px 16px;
             z-index: 100;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
         }
 
         .main-content {
             padding: 32px;
-            margin-left: 16.666667%; /* Compensa a col-md-2 fixa */
         }
 
         /* CAIXA DE USUÁRIO */
@@ -79,6 +82,7 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.85rem;
+            flex-shrink: 0;
         }
 
         /* LINKS DO MENU */
@@ -143,20 +147,17 @@
         }
 
         /* RESPONSIVIDADE (MOBILE) */
-        @media (max-width: 768px) {
+        @media (max-width: 767.98px) {
             .sidebar {
-                min-height: auto;
-                width: 100%;
-                position: relative;
+                padding: 15px;
                 border-right: none;
                 border-bottom: 1px solid var(--input-border);
-                padding: 15px;
             }
             .main-content {
-                margin-left: 0;
-                padding: 20px 12px;
+                padding: 24px 12px;
             }
             .user-box {
+                margin-top: 15px;
                 margin-bottom: 15px;
             }
         }
@@ -164,24 +165,20 @@
 </head>
 <body>
 
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid p-0">
+    <div class="row g-0">
 
-        <!-- NAVBAR/SIDEBAR -->
-        <div class="col-md-2 sidebar">
+        <div class="col-12 col-md-3 col-xl-2 sidebar">
             
-            <!-- Botão colapsável para Mobile -->
-            <div class="d-flex justify-content-between align-items-center mb-3 d-md-block">
-                <h4 class="fw-black m-0 text-white tracking-wide">⚽ BOLÃO FC</h4>
-                <button class="btn btn-outline-light d-md-none border-0" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-                    <i class="bi bi-list fs-3"></i>
+            <div class="d-flex justify-content-between align-items-center d-md-block">
+                <h4 class="fw-black m-0 text-white tracking-wide" style="letter-spacing: 0.5px;">⚽ BOLÃO FC</h4>
+                <button class="btn btn-outline-light d-md-none border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
+                    <i class="bi bi-list fs-2"></i>
                 </button>
             </div>
 
-            <!-- Menu envelopado para colapsar no mobile -->
             <div class="collapse d-md-block" id="sidebarMenu">
                 
-                <!-- CONTAINER DO USUÁRIO LOGADO -->
                 <div class="user-box">
                     {% if request.user.profile.image %}
                         <img src="{{ request.user.profile.image.url }}" class="avatar" alt="Avatar">
@@ -204,14 +201,17 @@
                     </div>
                 </div>
 
-                <!-- ITENS DE NAVEGAÇÃO -->
                 <nav class="d-flex flex-column">
                     <a class="menu-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
                         <i class="bi bi-grid-1x2-fill"></i> Dashboard
                     </a>
 
                     <a class="menu-link {% if request.resolver_match.url_name == 'fazer_palpites' %}active{% endif %}" href="{% url 'fazer_palpites' %}">
-                        <i class="bi bi-trophy-fill"></i> Palpites
+                        <i class="bi bi-pencil-square"></i> Palpites
+                    </a>
+                    
+                    <a class="menu-link {% if request.resolver_match.url_name == 'meus_palpites' %}active{% endif %}" href="{% url 'meus_palpites' %}">
+                        <i class="bi bi-trophy-fill"></i> Meus Palpites
                     </a>
 
                     <a class="menu-link {% if request.resolver_match.url_name == 'ranking' %}active{% endif %}" href="{% url 'ranking' %}">
@@ -222,14 +222,13 @@
                         <i class="bi bi-book-half"></i> Regras
                     </a>
 
-                    <hr style="border-color: var(--input-border); margin: 15px 0;">
+                    <hr style="border-color: var(--input-border); margin: 15px 0; opacity: 0.6;">
 
-                    <!-- CONFIGURAÇÕES E SAÍDA -->
                     <a class="menu-link" href="#" data-bs-toggle="modal" data-bs-target="#settingsModal">
                         <i class="bi bi-gear-fill"></i> Configurações
                     </a>
 
-                    <a class="menu-link text-danger rgba-danger-hover" href="{% url 'logout' %}">
+                    <a class="menu-link text-danger" href="{% url 'logout' %}">
                         <i class="bi bi-box-arrow-right"></i> Sair
                     </a>
                 </nav>
@@ -237,15 +236,13 @@
             </div>
         </div>
 
-        <!-- CONTEÚDO PRINCIPAL (INJETADO AQUI) -->
-        <div class="col-md-10 main-content">
+        <div class="col-12 col-md-9 col-xl-10 main-content">
             {% block content %}{% endblock %}
         </div>
 
     </div>
 </div>
 
-<!-- MODAL DE CONFIGURAÇÕES REESTILIZADO -->
 <div class="modal fade" id="settingsModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content modal-content-custom shadow-lg">
@@ -263,7 +260,6 @@
                 <form method="POST" enctype="multipart/form-data" action="{% url 'update_profile' %}">
                     {% csrf_token %}
 
-                    <!-- PREVIEW DA FOTO ATUAL -->
                     <div class="text-center mb-4">
                         {% if request.user.profile.image %}
                             <img src="{{ request.user.profile.image.url }}" style="width:85px; height:85px; border-radius:50%; object-fit:cover; border:3px solid var(--verde-chute); box-shadow: 0 0 15px rgba(61,180,109,0.2);">
@@ -274,27 +270,23 @@
                         {% endif %}
                     </div>
 
-                    <!-- CAMPO: NOME -->
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-white">Nome de Exibição</label>
                         <input type="text" name="first_name" value="{{ request.user.first_name }}" class="form-control form-control-custom">
                         <div class="hint">Modifique como seu nome aparecerá no painel de líderes.</div>
                     </div>
 
-                    <!-- CAMPO: SENHA -->
                     <div class="mb-3">
                         <label class="form-label small fw-semibold text-white">Nova Senha</label>
                         <input type="password" name="password" class="form-control form-control-custom" placeholder="••••••••">
                         <div class="hint">Deixe em branco se não desejar alterar sua senha atual.</div>
                     </div>
 
-                    <!-- CAMPO: FOTO -->
                     <div class="mb-4">
                         <label class="form-label small fw-semibold text-white">Alterar Foto de Perfil</label>
                         <input type="file" name="image" class="form-control form-control-custom" style="font-size: 0.9rem;">
                     </div>
 
-                    <!-- BOTÃO SALVAR -->
                     <button type="submit" class="btn btn-success w-100 fw-bold py-2.5" style="background-color: var(--verde-chute); border: none; border-radius: 10px;">
                         <i class="bi bi-save2-fill me-2"></i>Salvar Alterações
                     </button>

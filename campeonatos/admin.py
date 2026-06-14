@@ -34,12 +34,27 @@ class JogoAdmin(admin.ModelAdmin):
         'time_casa',
         'time_visitante',
         'data_jogo',
+        'rodada',
+        'gols_casa',
+        'gols_visitante',
         'encerrado'
+    )
+
+    list_editable = (
+        'gols_casa',
+        'gols_visitante',
+        'encerrado',
     )
 
     list_filter = (
         'campeonato',
-        'encerrado'
+        'encerrado',
+        'rodada'
+    )
+
+    search_fields = (
+        'time_casa__nome',
+        'time_visitante__nome',
     )
 
 

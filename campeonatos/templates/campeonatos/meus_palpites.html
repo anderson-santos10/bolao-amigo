@@ -1,0 +1,173 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Meus Palpites{% endblock %}
+
+{% block content %}
+<style>
+    /* Container do Grupo */
+    .grupo-container {
+        background-color: var(--bg-card);
+        border: 1px solid var(--input-border);
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .grupo-titulo {
+        font-size: 1.15rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--input-border);
+        padding-bottom: 12px;
+    }
+
+    /* Linha de cada jogo dentro do grupo */
+    .jogo-linha {
+        background-color: var(--input-bg);
+        border: 1px solid rgba(35, 45, 69, 0.6);
+        border-radius: 12px;
+        transition: transform 0.15s ease;
+    }
+
+    .jogo-linha:hover {
+        transform: scale(1.005);
+        border-color: var(--input-border);
+    }
+
+    .bandeira {
+        width: 30px;
+        height: 20px;
+        object-fit: cover;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+
+    .vs {
+        font-weight: 800;
+        color: var(--texto-secundario);
+        font-size: 0.75rem;
+        padding: 2px 6px;
+    }
+
+    /* Mini caixas de placar estilo linha */
+    .placar-box {
+        background: #091124;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        padding: 6px 12px;
+        font-family: monospace;
+        font-size: 1.1rem;
+        font-weight: 800;
+        min-width: 70px;
+        display: inline-block;
+    }
+</style>
+
+<div class="container py-4">
+
+    <div class="mb-5 text-center text-md-start">
+        <h2 class="fw-black text-white mb-1">⚽ MEUS PALPITES</h2>
+        <p class="text-custom-secondary mb-0 small fw-medium">Fase de Grupos organizada por chaves</p>
+    </div>
+
+    {% if palpites %}
+        
+        {% regroup palpites by jogo.grupo as grupo_list %}
+
+        <div class="row g-4">
+            {% for grupo in grupo_list %}
+            <div class="col-12">
+                
+                <div class="grupo-container">
+                    <div class="grupo-titulo text-warning mb-4 d-flex align-items-center justify-content-between">
+                        <span><i class="bi bi-grid-3x3-gap-fill me-2"></i>GRUPO {{ grupo.grouper }}</span>
+                        <span class="badge bg-secondary bg-opacity-10 text-custom-secondary border border-secondary border-opacity-25" style="font-size: 0.75rem;">{{ grupo.list|length }} jogos</span>
+                    </div>
+
+                    <div class="d-flex flex-column gap-3">
+                        {% for palpite in grupo.list %}
+                        <div class="jogo-linha p-3">
+                            <div class="row align-items-center g-2">
+                                
+                                <div class="col-12 col-md-2 text-md-start text-center">
+                                    <span class="text-custom-secondary d-block" style="font-size: 0.75rem; font-weight: 600;">R{{ palpite.jogo.rodada }}</span>
+                                    <small class="text-custom-secondary" style="font-size: 0.75rem;"><i class="bi bi-calendar3 me-1"></i>{{ palpite.jogo.data_jogo }}</small>
+                                </div>
+
+                                <div class="col-12 col-md-5">
+                                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
+                                        <div class="d-flex align-items-center gap-2 flex-row-reverse text-end" style="min-width: 120px;">
+                                            {% if palpite.jogo.time_casa.codigo_pais %}
+                                                <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_casa.codigo_pais|lower }}.png" class="bandeira" alt="Casa">
+                                            {% else %}
+                                                <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
+                                            {% endif %}
+                                            <strong class="text-white text-truncate" style="font-size: 0.9rem;">{{ palpite.jogo.time_casa.nome }}</strong>
+                                        </div>
+
+                                        <span class="vs">X</span>
+
+                                        <div class="d-flex align-items-center gap-2 text-start" style="min-width: 120px;">
+                                            {% if palpite.jogo.time_visitante.codigo_pais %}
+                                                <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_visitante.codigo_pais|lower }}.png" class="bandeira" alt="Visitante">
+                                            {% else %}
+                                                <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
+                                            {% endif %}
+                                            <strong class="text-white text-truncate" style="font-size: 0.9rem;">{{ palpite.jogo.time_visitante.nome }}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-6 col-md-3 text-center text-md-start d-flex align-items-center justify-content-center justify-content-md-start gap-3">
+                                    <div class="text-center">
+                                        <div class="placar-box text-warning">{{ palpite.gols_casa }}x{{ palpite.gols_visitante }}</div>
+                                        <div class="text-uppercase" style="font-size: 9px; color: var(--texto-secundario); font-weight: 700; margin-top: 2px;">Palpite</div>
+                                    </div>
+
+                                    {% if palpite.jogo.encerrado %}
+                                    <div class="text-center">
+                                        <div class="placar-box text-verde">{{ palpite.jogo.gols_casa }}x{{ palpite.jogo.gols_visitante }}</div>
+                                        <div class="text-uppercase" style="font-size: 9px; color: var(--verde-chute); font-weight: 700; margin-top: 2px;">Oficial</div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <div class="col-6 col-md-2 text-end pe-md-2 d-flex align-items-center justify-content-end">
+                                    {% if palpite.jogo.encerrado %}
+                                        {% if palpite.pontos > 0 %}
+                                            <span class="badge fw-bold shadow-sm" style="background-color: rgba(61, 180, 109, 0.15); color: var(--verde-chute); border: 1px solid rgba(61, 180, 109, 0.2); padding: 6px 12px; border-radius: 6px;">
+                                                +{{ palpite.pontos }} pts
+                                            </span>
+                                        {% else %}
+                                            <span class="badge fw-bold" style="background-color: rgba(239, 68, 110, 0.1); color: var(--status-danger); border: 1px solid rgba(239, 68, 110, 0.15); padding: 6px 12px; border-radius: 6px;">
+                                                0 pts
+                                            </span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="badge fw-medium" style="background-color: rgba(251, 191, 36, 0.08); color: var(--status-warning); border: 1px solid rgba(251, 191, 36, 0.15); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem;">
+                                            Pendente
+                                        </span>
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="card-box text-center py-5">
+            <i class="bi bi-file-earmark-text text-custom-secondary d-block fs-1 mb-3"></i>
+            <h5 class="fw-bold text-white mb-2">Nenhum palpite enviado</h5>
+            <p class="text-custom-secondary small mb-0">Você ainda não registrou nenhum palpite para o torneio.</p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

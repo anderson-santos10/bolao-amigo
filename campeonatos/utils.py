@@ -1,43 +1,53 @@
-from django.utils import timezone
-from datetime import timedelta
-from campeonatos.data import GRUPOS
-from .models import Campeonato, Grupo, Jogo, Time
+from django.db.models import Sum
+from campeonatos.models import Jogo, Palpite
+from usuarios.models import Profile
 
 
-def gerar_jogos_campeonato(campeonato_id):
-    campeonato = Campeonato.objects.get(id=campeonato_id)
+def calcular_pontos_jogo(jogo_id):
+    jogo = Jogo.objects.get(id=jogo_id)
 
-    grupos = Grupo.objects.filter(campeonato=campeonato)
+    palpites = Palpite.objects.filter(jogo=jogo)
 
-    data_base = timezone.make_aware(
-        timezone.datetime(2026, 6, 11, 16, 0)
-    )
+    for p in palpites:
 
-    for grupo in grupos:
-        times = list(grupo.times.all())
+        pontos = 0
 
-        if len(times) < 4:
-            print(f"Grupo {grupo.nome} ignorado (menos de 4 times)")
-            continue
+        # acerto exato
+        if (
+            p.gols_casa == jogo.gols_casa and
+            p.gols_visitante == jogo.gols_visitante
+        ):
+            pontos = 3
 
-        confrontos = [
-            (0,1),
-            (2,3),
-            (0,2),
-            (1,3),
-            (0,3),
-            (1,2),
-        ]
+        else:
+            if jogo.gols_casa > jogo.gols_visitante:
+                resultado_jogo = "C"
+            elif jogo.gols_casa < jogo.gols_visitante:
+                resultado_jogo = "F"
+            else:
+                resultado_jogo = "E"
 
-        for i, (a, b) in enumerate(confrontos):
+            if p.gols_casa > p.gols_visitante:
+                resultado_palpite = "C"
+            elif p.gols_casa < p.gols_visitante:
+                resultado_palpite = "F"
+            else:
+                resultado_palpite = "E"
 
-            Jogo.objects.get_or_create(
-                campeonato=campeonato,
-                rodada=i+1,
-                time_casa=times[a],
-                time_visitante=times[b],
-                defaults={
-                    "estadio": "Estádio FIFA",
-                    "data_jogo": data_base + timedelta(days=i*6),
-                }
-            )
+            if resultado_jogo == resultado_palpite:
+                pontos = 1
+
+        p.pontos = pontos
+        p.save()
+
+    # 🔥 RESETA E RECALCULA TUDO (CORREÇÃO DEFINITIVA)
+    for profile in Profile.objects.all():
+        total = Palpite.objects.filter(usuario=profile.user).aggregate(
+            total=Sum('pontos')
+        )['total'] or 0
+
+        profile.pontuacao_total = total
+        profile.save()
+
+    jogo.pontos_calculados = True
+    jogo.save()
