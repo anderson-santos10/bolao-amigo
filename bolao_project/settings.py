@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
 SECRET_KEY = "django-insecure-95%=%7n40_=82!o=c9b#$s&4*kx$0sr0ofu%ipym21vq@ykq6i"
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     ".railway.app",
@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "usuarios.apps.UsuariosConfig",
-    "campeonatos",
+    "campeonatos.apps.CampeonatosConfig",
 ]
 
 # MIDDLEWARE

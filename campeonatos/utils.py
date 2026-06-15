@@ -3,51 +3,64 @@ from campeonatos.models import Jogo, Palpite
 from usuarios.models import Profile
 
 
-def calcular_pontos_jogo(jogo_id):
-    jogo = Jogo.objects.get(id=jogo_id)
+def recalcular_tudo():
 
-    palpites = Palpite.objects.filter(jogo=jogo)
+    # Zera todos os pontos dos palpites
+    Palpite.objects.update(pontos=0)
 
-    for p in palpites:
+    # Recalcula jogo por jogo
+    jogos = Jogo.objects.filter(
+        encerrado=True,
+        gols_casa__isnull=False,
+        gols_visitante__isnull=False
+    )
 
-        pontos = 0
+    for jogo in jogos:
 
-        # acerto exato
-        if (
-            p.gols_casa == jogo.gols_casa and
-            p.gols_visitante == jogo.gols_visitante
-        ):
-            pontos = 3
+        palpites = Palpite.objects.filter(jogo=jogo)
 
-        else:
-            if jogo.gols_casa > jogo.gols_visitante:
-                resultado_jogo = "C"
-            elif jogo.gols_casa < jogo.gols_visitante:
-                resultado_jogo = "F"
+        for p in palpites:
+
+            pontos = 0
+
+            # Acertou placar exato
+            if (
+                p.gols_casa == jogo.gols_casa and
+                p.gols_visitante == jogo.gols_visitante
+            ):
+                pontos = 3
+
             else:
-                resultado_jogo = "E"
 
-            if p.gols_casa > p.gols_visitante:
-                resultado_palpite = "C"
-            elif p.gols_casa < p.gols_visitante:
-                resultado_palpite = "F"
-            else:
-                resultado_palpite = "E"
+                if jogo.gols_casa > jogo.gols_visitante:
+                    resultado_jogo = "C"
+                elif jogo.gols_casa < jogo.gols_visitante:
+                    resultado_jogo = "F"
+                else:
+                    resultado_jogo = "E"
 
-            if resultado_jogo == resultado_palpite:
-                pontos = 1
+                if p.gols_casa > p.gols_visitante:
+                    resultado_palpite = "C"
+                elif p.gols_casa < p.gols_visitante:
+                    resultado_palpite = "F"
+                else:
+                    resultado_palpite = "E"
 
-        p.pontos = pontos
-        p.save()
+                if resultado_jogo == resultado_palpite:
+                    pontos = 1
 
-    # 🔥 RESETA E RECALCULA TUDO (CORREÇÃO DEFINITIVA)
+            p.pontos = pontos
+            p.save()
+
+    # Recalcula ranking
     for profile in Profile.objects.all():
-        total = Palpite.objects.filter(usuario=profile.user).aggregate(
-            total=Sum('pontos')
-        )['total'] or 0
+
+        total = (
+            Palpite.objects
+            .filter(usuario=profile.user)
+            .aggregate(total=Sum('pontos'))['total']
+            or 0
+        )
 
         profile.pontuacao_total = total
         profile.save()
-
-    jogo.pontos_calculados = True
-    jogo.save()

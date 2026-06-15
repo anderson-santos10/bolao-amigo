@@ -37,15 +37,6 @@ def regras_bolao_view(request):
     return render(request, 'campeonatos/regras.html')
 
 
-def ranking_view(request):
-
-    ranking = Profile.objects.select_related('user').order_by('-pontuacao_total')
-
-    return render(request, 'campeonatos/ranking.html', {
-        'ranking': ranking
-    })
-    
-    
 # =====================================================
 # POSIÇÃO DO USUÁRIO (UTIL)
 # =====================================================
@@ -63,8 +54,11 @@ def get_posicao_usuario(ranking, user):
 def dashboard_view(request):
 
     ranking = list(
-        Profile.objects.select_related('user')
-        .order_by('-pontuacao_total')
+    Profile.objects
+    .select_related('user')
+    .exclude(user__username="rootmaster")  # remove rootmaster
+    .exclude(user__is_superuser=True)      # opcional (mais seguro)
+    .order_by('-pontuacao_total')
     )
 
     # garante profile do usuário

@@ -126,8 +126,17 @@ def meus_palpites(request):
 # =====================================================
 # RANKING
 # =====================================================
+EXCLUDED_USERS = ["rootmaster"]
+
 def ranking(request):
-    ranking = Profile.objects.select_related('user').order_by('-pontuacao_total')
+
+    ranking = Profile.objects.select_related('user').exclude(
+        user__username__in=EXCLUDED_USERS
+    ).exclude(
+        user__is_superuser=True
+    ).exclude(
+        user__is_staff=True
+    ).order_by('-pontuacao_total')
 
     return render(request, 'campeonatos/ranking.html', {
         'ranking': ranking

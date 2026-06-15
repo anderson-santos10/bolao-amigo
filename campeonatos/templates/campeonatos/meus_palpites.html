@@ -5,153 +5,197 @@
 
 {% block content %}
 <style>
-    /* Container do Grupo */
-    .grupo-container {
+    /* Grid de Grupos baseado na imagem de referência */
+    .grupo-card {
         background-color: var(--bg-card);
         border: 1px solid var(--input-border);
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
     }
 
-    .grupo-titulo {
-        font-size: 1.15rem;
-        font-weight: 800;
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid var(--input-border);
-        padding-bottom: 12px;
-    }
-
-    /* Linha de cada jogo dentro do grupo */
-    .jogo-linha {
+    .grupo-header {
         background-color: var(--input-bg);
-        border: 1px solid rgba(35, 45, 69, 0.6);
-        border-radius: 12px;
-        transition: transform 0.15s ease;
+        border: 1px solid var(--input-border);
+        border-radius: 10px;
+        font-size: 0.9rem;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 8px 12px;
+        color: #ffffff !important;
     }
 
-    .jogo-linha:hover {
-        transform: scale(1.005);
-        border-color: var(--input-border);
+    /* Linhas de Jogos Compactas */
+    .jogo-item {
+        border-bottom: 1px solid rgba(35, 45, 69, 0.4);
+        padding: 10px 0;
+    }
+
+    .jogo-item:last-child {
+        border-bottom: none;
+    }
+
+    .selecao-nome {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #ffffff;
+        max-width: 90px;
     }
 
     .bandeira {
-        width: 30px;
-        height: 20px;
+        width: 24px;
+        height: 16px;
         object-fit: cover;
-        border-radius: 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        border-radius: 3px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
     }
 
-    .vs {
-        font-weight: 800;
+    .vs-text {
+        font-size: 0.7rem;
+        font-weight: 700;
         color: var(--texto-secundario);
-        font-size: 0.75rem;
-        padding: 2px 6px;
     }
 
-    /* Mini caixas de placar estilo linha */
-    .placar-box {
-        background: #091124;
+    /* Bloco de Predição Lateral (Estilo image_0c9ba2.jpg) */
+    .predicao-wrapper {
+        text-align: center;
+        min-width: 75px;
+    }
+
+    .predicao-label {
+        font-size: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--texto-secundario);
+        letter-spacing: 0.5px;
+        margin-bottom: 2px;
+    }
+
+    .placar-caixa {
+        background-color: var(--input-bg);
         border: 1px solid var(--input-border);
-        border-radius: 8px;
-        padding: 6px 12px;
-        font-family: monospace;
-        font-size: 1.1rem;
+        color: #ffffff;
         font-weight: 800;
-        min-width: 70px;
-        display: inline-block;
+        font-size: 0.95rem;
+        padding: 4px 8px;
+        border-radius: 6px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* Modificadores de Status baseados no encerramento e pontuação */
+    .placar-finalizado {
+        background-color: rgba(61, 180, 109, 0.12) !important;
+        border-color: rgba(61, 180, 109, 0.3) !important;
+        color: var(--verde-chute) !important;
+    }
+
+    .placar-errado {
+        background-color: rgba(239, 68, 110, 0.08) !important;
+        border-color: rgba(239, 68, 110, 0.2) !important;
+        color: #ef446e !important;
+    }
+
+    .status-subtext {
+        font-size: 8px;
+        font-weight: 600;
+        margin-top: 2px;
+        display: block;
     }
 </style>
 
-<div class="container py-4">
+<div class="container-fluid py-4">
 
-    <div class="mb-5 text-center text-md-start">
-        <h2 class="fw-black text-white mb-1">⚽ MEUS PALPITES</h2>
-        <p class="text-custom-secondary mb-0 small fw-medium">Fase de Grupos organizada por chaves</p>
+    <!-- Cabeçalho alinhado com o padrão do dashboard -->
+    <div class="mb-4">
+        <span class="text-uppercase fw-bold small" style="color: var(--verde-chute); letter-spacing: 1px;">Visão Geral</span>
+        <h2 class="fw-black text-white m-0">MEUS PALPITES - FASE DE GRUPOS</h2>
+        <p class="text-muted small m-0">Todos os jogos organizados por chaves oficiais da competição.</p>
     </div>
 
     {% if palpites %}
-        
         {% regroup palpites by jogo.grupo as grupo_list %}
 
-        <div class="row g-4">
+        <!-- Grid Inteligente: Muda de 1 col (mobile) para 2 ou 3 colunas em telas maiores -->
+        <div class="row g-3">
             {% for grupo in grupo_list %}
-            <div class="col-12">
+            <div class="col-12 col-md-6 col-lg-4">
                 
-                <div class="grupo-container">
-                    <div class="grupo-titulo text-warning mb-4 d-flex align-items-center justify-content-between">
-                        <span><i class="bi bi-grid-3x3-gap-fill me-2"></i>GRUPO {{ grupo.grouper }}</span>
-                        <span class="badge bg-secondary bg-opacity-10 text-custom-secondary border border-secondary border-opacity-25" style="font-size: 0.75rem;">{{ grupo.list|length }} jogos</span>
+                <div class="grupo-card">
+                    <!-- Topo do Card do Grupo -->
+                    <div class="grupo-header d-flex align-items-center justify-content-between mb-2">
+                        <span>GRUPO {{ grupo.grouper }}</span>
+                        <small class="opacity-70 fw-normal" style="font-size: 0.75rem;">{{ grupo.list|length }} Jogos</small>
                     </div>
 
-                    <div class="d-flex flex-column gap-3">
+                    <!-- Lista Interna de Confrontos -->
+                    <div class="d-flex flex-column flex-grow-1 justify-content-center">
                         {% for palpite in grupo.list %}
-                        <div class="jogo-linha p-3">
-                            <div class="row align-items-center g-2">
-                                
-                                <div class="col-12 col-md-2 text-md-start text-center">
-                                    <span class="text-custom-secondary d-block" style="font-size: 0.75rem; font-weight: 600;">R{{ palpite.jogo.rodada }}</span>
-                                    <small class="text-custom-secondary" style="font-size: 0.75rem;"><i class="bi bi-calendar3 me-1"></i>{{ palpite.jogo.data_jogo }}</small>
-                                </div>
-
-                                <div class="col-12 col-md-5">
-                                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2">
-                                        <div class="d-flex align-items-center gap-2 flex-row-reverse text-end" style="min-width: 120px;">
-                                            {% if palpite.jogo.time_casa.codigo_pais %}
-                                                <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_casa.codigo_pais|lower }}.png" class="bandeira" alt="Casa">
-                                            {% else %}
-                                                <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
-                                            {% endif %}
-                                            <strong class="text-white text-truncate" style="font-size: 0.9rem;">{{ palpite.jogo.time_casa.nome }}</strong>
-                                        </div>
-
-                                        <span class="vs">X</span>
-
-                                        <div class="d-flex align-items-center gap-2 text-start" style="min-width: 120px;">
-                                            {% if palpite.jogo.time_visitante.codigo_pais %}
-                                                <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_visitante.codigo_pais|lower }}.png" class="bandeira" alt="Visitante">
-                                            {% else %}
-                                                <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
-                                            {% endif %}
-                                            <strong class="text-white text-truncate" style="font-size: 0.9rem;">{{ palpite.jogo.time_visitante.nome }}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-6 col-md-3 text-center text-md-start d-flex align-items-center justify-content-center justify-content-md-start gap-3">
-                                    <div class="text-center">
-                                        <div class="placar-box text-warning">{{ palpite.gols_casa }}x{{ palpite.gols_visitante }}</div>
-                                        <div class="text-uppercase" style="font-size: 9px; color: var(--texto-secundario); font-weight: 700; margin-top: 2px;">Palpite</div>
-                                    </div>
-
-                                    {% if palpite.jogo.encerrado %}
-                                    <div class="text-center">
-                                        <div class="placar-box text-verde">{{ palpite.jogo.gols_casa }}x{{ palpite.jogo.gols_visitante }}</div>
-                                        <div class="text-uppercase" style="font-size: 9px; color: var(--verde-chute); font-weight: 700; margin-top: 2px;">Oficial</div>
-                                    </div>
-                                    {% endif %}
-                                </div>
-
-                                <div class="col-6 col-md-2 text-end pe-md-2 d-flex align-items-center justify-content-end">
-                                    {% if palpite.jogo.encerrado %}
-                                        {% if palpite.pontos > 0 %}
-                                            <span class="badge fw-bold shadow-sm" style="background-color: rgba(61, 180, 109, 0.15); color: var(--verde-chute); border: 1px solid rgba(61, 180, 109, 0.2); padding: 6px 12px; border-radius: 6px;">
-                                                +{{ palpite.pontos }} pts
-                                            </span>
-                                        {% else %}
-                                            <span class="badge fw-bold" style="background-color: rgba(239, 68, 110, 0.1); color: var(--status-danger); border: 1px solid rgba(239, 68, 110, 0.15); padding: 6px 12px; border-radius: 6px;">
-                                                0 pts
-                                            </span>
-                                        {% endif %}
+                        <div class="jogo-item d-flex align-items-center justify-content-between gap-2">
+                            
+                            <!-- Times e Bandeiras (Lado Esquerdo) -->
+                            <div class="d-flex flex-column gap-2 flex-grow-1">
+                                <!-- Time Casa -->
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if palpite.jogo.time_casa.codigo_pais %}
+                                        <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_casa.codigo_pais|lower }}.png" class="bandeira" alt="{{ palpite.jogo.time_casa.nome }}">
                                     {% else %}
-                                        <span class="badge fw-medium" style="background-color: rgba(251, 191, 36, 0.08); color: var(--status-warning); border: 1px solid rgba(251, 191, 36, 0.15); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem;">
-                                            Pendente
-                                        </span>
+                                        <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
+                                    {% endif %}
+                                    <span class="selecao-nome text-truncate">{{ palpite.jogo.time_casa.nome }}</span>
+                                    
+                                    {% if palpite.jogo.encerrado %}
+                                        <small class="text-muted ms-auto pe-2" style="font-size: 0.75rem;">({{ palpite.jogo.gols_casa }})</small>
                                     {% endif %}
                                 </div>
 
+                                <!-- Divisor VS discreto -->
+                                <div class="ps-1 py-0 my-0 lh-1"><span class="vs-text">vs</span></div>
+
+                                <!-- Time Visitante -->
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if palpite.jogo.time_visitante.codigo_pais %}
+                                        <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_visitante.codigo_pais|lower }}.png" class="bandeira" alt="{{ palpite.jogo.time_visitante.nome }}">
+                                    {% else %}
+                                        <img src="{% static 'img/placeholder.png' %}" class="bandeira" alt="Placeholder">
+                                    {% endif %}
+                                    <span class="selecao-nome text-truncate">{{ palpite.jogo.time_visitante.nome }}</span>
+                                    
+                                    {% if palpite.jogo.encerrado %}
+                                        <small class="text-muted ms-auto pe-2" style="font-size: 0.75rem;">({{ palpite.jogo.gols_visitante }})</small>
+                                    {% endif %}
+                                </div>
                             </div>
+
+                            <!-- Caixa do Palpite e Status (Lado Direito) -->
+                            <div class="predicao-wrapper">
+                                <div class="predicao-label">Predicto</div>
+                                
+                                <div class="placar-caixa 
+                                    {% if palpite.jogo.encerrado %}
+                                        {% if palpite.pontos > 0 %}placar-finalizado{% else %}placar-errado{% endif %}
+                                    {% endif %}">
+                                    <span>{{ palpite.gols_casa }}</span>
+                                    <span class="opacity-40" style="font-size: 0.75rem;">x</span>
+                                    <span>{{ palpite.gols_visitante }}</span>
+                                </div>
+
+                                <!-- Subtexto de validação idêntico ao modelo da imagem -->
+                                {% if palpite.jogo.encerrado %}
+                                    {% if palpite.pontos > 0 %}
+                                        <span class="status-subtext text-success"><i class="bi bi-check-circle-fill"></i> +{{ palpite.pontos }} pts</span>
+                                    {% else %}
+                                        <span class="status-subtext text-danger"><i class="bi bi-x-circle-fill"></i> 0 pts</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="status-subtext text-muted"><i class="bi bi-clock"></i> Pendente</span>
+                                {% endif %}
+                            </div>
+
                         </div>
                         {% endfor %}
                     </div>
@@ -162,10 +206,10 @@
         </div>
 
     {% else %}
-        <div class="card-box text-center py-5">
-            <i class="bi bi-file-earmark-text text-custom-secondary d-block fs-1 mb-3"></i>
+        <div class="card-box text-center py-5" style="background-color: var(--bg-card); border: 1px solid var(--input-border); border-radius: 16px;">
+            <i class="bi bi-file-earmark-text text-muted d-block fs-1 mb-3"></i>
             <h5 class="fw-bold text-white mb-2">Nenhum palpite enviado</h5>
-            <p class="text-custom-secondary small mb-0">Você ainda não registrou nenhum palpite para o torneio.</p>
+            <p class="text-muted small mb-0">Você ainda não possui palpites registrados para a fase de grupos.</p>
         </div>
     {% endif %}
 
