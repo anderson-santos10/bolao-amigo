@@ -156,6 +156,7 @@
                             <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-left">Jogador</th>
                             <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-center w-28">Vitórias</th>
                             <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-center w-28">Na Mosca</th>
+                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-center w-28">Erros</th>
                             <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario text-end w-32">Pontuação</th>
                         </tr>
                     </thead>
@@ -201,21 +202,28 @@
                                 </div>
                             </td>
 
-                            <!-- Coluna Vitórias (Centralizada) -->
+                            <!-- Coluna Vitórias (Centralizada) -> Cor: Azul Celeste -->
                             <td class="py-3.5 px-4 text-center">
-                                <span class="text-sm font-semibold text-white opacity-90">
+                                <span class="text-sm font-bold text-sky-400">
                                     {{ p.vitorias_certas|default:0 }}
                                 </span>
                             </td>
 
-                            <!-- Coluna Na Mosca (Centralizada) -->
+                            <!-- Coluna Na Mosca (Centralizada) -> Cor: Verde -->
                             <td class="py-3.5 px-4 text-center">
                                 <span class="text-sm font-bold text-verde">
                                     {{ p.acertos_cheios|default:0 }}
                                 </span>
                             </td>
 
-                            <!-- Coluna Pontuação -->
+                            <!-- Coluna Erros (Centralizada) -> Cor: Vermelho/Rose -->
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="text-sm font-bold text-rose-400">
+                                    {{ p.erros|default:0 }}
+                                </span>
+                            </td>
+
+                            <!-- Coluna Pontuação -> Cor: Verde Destacado -->
                             <td class="py-3.5 px-5 text-end">
                                 <span class="text-sm font-black text-verde tracking-wide bg-[#19233c] px-2.5 py-1 rounded-md border border-custom inline-block">
                                     {{ p.pontuacao_total }} <span class="text-[10px] text-secundario font-normal">pts</span>
@@ -225,7 +233,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="5" class="text-center text-secundario text-xs font-medium py-12">
+                            <td colspan="6" class="text-center text-secundario text-xs font-medium py-12">
                                 <i class="bi bi-info-circle text-xl block mb-2 opacity-50"></i>
                                 Nenhum competidor pontuou no ranking até o momento.
                             </td>

@@ -154,12 +154,17 @@ def ranking(request):
 
         vitorias_certas = 0
         acertos_cheios = 0
+        erros = 0
+
+        jogos_encerrados = 0
 
         for p in palpites:
             jogo = p.jogo
 
             if not jogo.encerrado:
                 continue
+
+            jogos_encerrados += 1
 
             # 🎯 placar exato
             if (
@@ -170,12 +175,39 @@ def ranking(request):
                 acertos_cheios += 1
                 continue
 
+            # 🧠 resultado do jogo real
+            if jogo.gols_casa > jogo.gols_visitante:
+                resultado_real = "casa"
+            elif jogo.gols_casa < jogo.gols_visitante:
+                resultado_real = "visitante"
+            else:
+                resultado_real = "empate"
+
+            # 🧠 resultado do palpite
+            if p.gols_casa > p.gols_visitante:
+                resultado_palpite = "casa"
+            elif p.gols_casa < p.gols_visitante:
+                resultado_palpite = "visitante"
+            else:
+                resultado_palpite = "empate"
+
+            # 🧮 vitória (acertou resultado, mesmo sem placar exato)
+            if resultado_palpite == resultado_real:
+                vitorias_certas += 1
+            else:
+                erros += 1
+
+        # 📊 pendentes (total jogos - palpites válidos)
+        total_jogos = Jogo.objects.filter(encerrado=True).count()
+        jogos_pendentes = max(total_jogos - jogos_encerrados, 0)
+
         profile.vitorias_certas = vitorias_certas
         profile.acertos_cheios = acertos_cheios
+        profile.erros = erros
+        profile.jogos_pendentes = jogos_pendentes
 
         ranking_final.append(profile)
 
-    # ordena por pontuação
     ranking_final.sort(key=lambda x: x.pontuacao_total, reverse=True)
 
     return render(request, 'campeonatos/ranking.html', {
