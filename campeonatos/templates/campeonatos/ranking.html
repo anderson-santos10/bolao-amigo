@@ -51,10 +51,9 @@
 </style>
 
 <div class="min-h-screen pb-12 text-white">
-    
     <!-- CONTAINER PRINCIPAL -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        
+                
         <!-- HEADER DA PÁGINA -->
         <div class="mb-8 text-center md:text-left">
             <h2 class="text-2xl font-black text-white tracking-wide uppercase">🏆 RANKING DO BOLÃO 2026</h2>
@@ -76,7 +75,7 @@
                         {% with p=ranking.1 %}
                         <div class="relative group">
                             {% if p.user.profile.image %}
-                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#c0c0c0] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="2º Lugar">
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#c0c0c0] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}">
                             {% else %}
                                 <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#19233c] border-4 border-[#c0c0c0] flex items-center justify-center text-xl text-secundario shadow-lg"><i class="bi bi-person-fill"></i></div>
                             {% endif %}
@@ -84,7 +83,7 @@
                         </div>
                         <div class="mt-3 max-w-full">
                             <a class="text-xs sm:text-sm font-bold text-white hover:text-verde truncate block transition-colors" href="{% url 'palpites_usuario' p.user.id %}">
-                                {{ p.user.first_name|default:p.user.username }}
+                                {{ p.user.get_full_name|default:p.user.username }}
                             </a>
                             <span class="text-[11px] sm:text-xs text-secundario font-semibold block mt-0.5">{{ p.pontuacao_total }} <span class="font-normal text-[10px]">pts</span></span>
                         </div>
@@ -99,10 +98,9 @@
                     {% if ranking|length > 0 %}
                         {% with p=ranking.0 %}
                         <div class="relative group">
-                            <!-- Coroa de Líder -->
                             <i class="bi bi-trophy-fill text-[#ffd700] text-lg absolute -top-7 left-1/2 transform -translate-x-1/2 drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]"></i>
                             {% if p.user.profile.image %}
-                                <img class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-[#ffd700] shadow-[0_0_20px_rgba(255,215,0,0.15)] transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="1º Lugar">
+                                <img class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-[#ffd700] shadow-[0_0_20px_rgba(255,215,0,0.15)] transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}">
                             {% else %}
                                 <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#19233c] border-4 border-[#ffd700] flex items-center justify-center text-2xl text-[#ffd700] shadow-lg"><i class="bi bi-crown-fill"></i></div>
                             {% endif %}
@@ -110,7 +108,7 @@
                         </div>
                         <div class="mt-3 max-w-full">
                             <a class="text-sm sm:text-base font-black text-white hover:text-verde truncate block transition-colors uppercase tracking-wide" href="{% url 'palpites_usuario' p.user.id %}">
-                                {{ p.user.first_name|default:p.user.username }}
+                                {{ p.user.get_full_name|default:p.user.username }}
                             </a>
                             <span class="text-xs sm:text-sm text-verde font-bold block mt-0.5">{{ p.pontuacao_total }} <span class="text-secundario font-normal text-xs">pts</span></span>
                         </div>
@@ -126,7 +124,7 @@
                         {% with p=ranking.2 %}
                         <div class="relative group">
                             {% if p.user.profile.image %}
-                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#cd7f32] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="3º Lugar">
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#cd7f32] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}">
                             {% else %}
                                 <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#19233c] border-4 border-[#cd7f32] flex items-center justify-center text-xl text-secundario shadow-lg"><i class="bi bi-person-fill"></i></div>
                             {% endif %}
@@ -134,7 +132,7 @@
                         </div>
                         <div class="mt-3 max-w-full">
                             <a class="text-xs sm:text-sm font-bold text-white hover:text-verde truncate block transition-colors" href="{% url 'palpites_usuario' p.user.id %}">
-                                {{ p.user.first_name|default:p.user.username }}
+                                {{ p.user.get_full_name|default:p.user.username }}
                             </a>
                             <span class="text-[11px] sm:text-xs text-secundario font-semibold block mt-0.5">{{ p.pontuacao_total }} <span class="font-normal text-[10px]">pts</span></span>
                         </div>
@@ -151,22 +149,23 @@
         <div class="card-box overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
-                    
+                                        
                     <thead>
-                        <tr class="border-b border-custom bg-white bg-opacity-[0.02]">
-                            <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario w-20 text-center">Posição</th>
-                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario">Jogador</th>
+                        <tr class="border-b border-custom bg-[#091124] bg-opacity-50">
+                            <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario w-24 text-center">Posição</th>
+                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-left">Jogador</th>
+                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-center w-28">Vitórias</th>
+                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario text-center w-28">Na Mosca</th>
                             <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario text-end w-32">Pontuação</th>
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-[#1f2b48] divide-opacity-50">
+                    <tbody class="divide-y divide-[#1f2b48] divide-opacity-40">
                         {% for p in ranking %}
-                        <!-- Linha inteiramente clicável com redirecionamento dinâmico via JS -->
-                        <tr onclick="window.location='{% url 'palpites_usuario' p.user.id %}'" 
-                            class="group cursor-pointer transition-colors hover:bg-white hover:bg-opacity-[0.03] {% if p.user == request.user %}bg-[#3db46d] bg-opacity-[0.06] border-l-4 border-l-[#3db46d]{% endif %}">
-                            
-                            <!-- Coluna Posição -->
+                        <tr onclick="window.location='{% url 'palpites_usuario' p.user.id %}'"
+                            class="group cursor-pointer transition-colors hover:bg-white hover:bg-opacity-[0.02] {% if p.user == request.user %}bg-[#3db46d] bg-opacity-[0.04] border-l-4 border-l-[#3db46d]{% endif %}">
+
+                            <!-- Coluna Posição (Centralizada) -->
                             <td class="py-3.5 px-5 text-center font-bold text-sm">
                                 {% if forloop.counter == 1 %}
                                     <span class="inline-flex items-center justify-center bg-[#ffd700] bg-opacity-10 text-[#ffd700] text-xs font-black w-7 h-7 rounded-lg border border-[#ffd700] border-opacity-20">1º</span>
@@ -179,31 +178,46 @@
                                 {% endif %}
                             </td>
 
-                            <!-- Coluna Jogador -->
-                            <td class="py-3.5 px-4">
+                            <!-- Coluna Jogador (Alinhada à Esquerda com Avatar) -->
+                            <td class="py-3.5 px-4 text-left">
                                 <div class="flex items-center gap-3">
                                     {% if p.user.profile.image %}
-                                        <img src="{{ p.user.profile.image.url }}" alt="Avatar" class="w-9 h-9 rounded-full object-cover border border-custom flex-shrink-0">
+                                        <img src="{{ p.user.profile.image.url }}" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-custom flex-shrink-0">
                                     {% else %}
-                                        <div class="w-9 h-9 rounded-full bg-[#19233c] border border-custom flex items-center justify-center text-xs text-secundario font-bold uppercase tracking-wider flex-shrink-0">
+                                        <div class="w-8 h-8 rounded-full bg-[#19233c] border border-custom flex items-center justify-center text-[10px] text-secundario font-bold uppercase tracking-wider flex-shrink-0">
                                             {{ p.user.username|slice:":2" }}
                                         </div>
                                     {% endif %}
                                     
-                                    <div class="min-w-0">
-                                        <a class="text-xs sm:text-sm font-bold text-white group-hover:text-verde transition-colors truncate block" href="{% url 'palpites_usuario' p.user.id %}">
-                                            {{ p.user.first_name|default:p.user.username }}
+                                    <!-- Nome primeiro, e a tag VOCÊ na frente (à direita) -->
+                                    <div class="min-w-0 flex items-center gap-1.5">
+                                        <a class="text-xs sm:text-sm font-bold text-white group-hover:text-verde transition-colors truncate" href="{% url 'palpites_usuario' p.user.id %}">
+                                            {{ p.user.get_full_name|default:p.user.username }}
                                         </a>
                                         {% if p.user == request.user %}
-                                            <span class="text-[9px] bg-[#3db46d] bg-opacity-20 text-verde font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">Você</span>
+                                            <span class="text-[9px] bg-[#3db46d] bg-opacity-20 text-verde font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider flex-shrink-0">Você</span>
                                         {% endif %}
                                     </div>
                                 </div>
                             </td>
 
-                            <!-- Coluna Pontos -->
+                            <!-- Coluna Vitórias (Centralizada) -->
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="text-sm font-semibold text-white opacity-90">
+                                    {{ p.vitorias_certas|default:0 }}
+                                </span>
+                            </td>
+
+                            <!-- Coluna Na Mosca (Centralizada) -->
+                            <td class="py-3.5 px-4 text-center">
+                                <span class="text-sm font-bold text-verde">
+                                    {{ p.acertos_cheios|default:0 }}
+                                </span>
+                            </td>
+
+                            <!-- Coluna Pontuação -->
                             <td class="py-3.5 px-5 text-end">
-                                <span class="text-sm font-black text-verde tracking-wide">
+                                <span class="text-sm font-black text-verde tracking-wide bg-[#19233c] px-2.5 py-1 rounded-md border border-custom inline-block">
                                     {{ p.pontuacao_total }} <span class="text-[10px] text-secundario font-normal">pts</span>
                                 </span>
                             </td>
@@ -211,8 +225,8 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="3" class="text-center text-secundario text-xs font-medium py-8">
-                                <i class="bi bi-info-circle d-block text-base mb-1"></i>
+                            <td colspan="5" class="text-center text-secundario text-xs font-medium py-12">
+                                <i class="bi bi-info-circle text-xl block mb-2 opacity-50"></i>
                                 Nenhum competidor pontuou no ranking até o momento.
                             </td>
                         </tr>

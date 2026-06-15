@@ -136,16 +136,50 @@ EXCLUDED_USERS = ["rootmaster"]
 
 def ranking(request):
 
-    ranking = Profile.objects.select_related('user').exclude(
+    ranking_base = Profile.objects.select_related('user').exclude(
         user__username__in=EXCLUDED_USERS
     ).exclude(
         user__is_superuser=True
     ).exclude(
         user__is_staff=True
-    ).order_by('-pontuacao_total')
+    )
+
+    ranking_final = []
+
+    for profile in ranking_base:
+
+        palpites = Palpite.objects.filter(
+            usuario=profile.user
+        ).select_related('jogo')
+
+        vitorias_certas = 0
+        acertos_cheios = 0
+
+        for p in palpites:
+            jogo = p.jogo
+
+            if not jogo.encerrado:
+                continue
+
+            # 🎯 placar exato
+            if (
+                p.gols_casa == jogo.gols_casa and
+                p.gols_visitante == jogo.gols_visitante
+            ):
+                vitorias_certas += 1
+                acertos_cheios += 1
+                continue
+
+        profile.vitorias_certas = vitorias_certas
+        profile.acertos_cheios = acertos_cheios
+
+        ranking_final.append(profile)
+
+    # ordena por pontuação
+    ranking_final.sort(key=lambda x: x.pontuacao_total, reverse=True)
 
     return render(request, 'campeonatos/ranking.html', {
-        'ranking': ranking
+        'ranking': ranking_final
     })
 
 
@@ -165,11 +199,15 @@ def finalizar_jogo(request, jogo_id):
 
 
 # PALPITES DO USUÁRIO
+User = get_user_model()
 
 
 def palpites_usuario(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
 
+    # =========================
+    # PALPITES DO USUÁRIO
+    # =========================
     palpites = Palpite.objects.filter(
         usuario=usuario
     ).select_related('jogo', 'jogo__time_casa', 'jogo__time_visitante')
@@ -179,17 +217,91 @@ def palpites_usuario(request, user_id):
     total_jogos = Jogo.objects.count()
     total_palpites = palpites.count()
 
-    # ESTATÍSTICAS (BÁSICAS)
+    # =========================
+    # ESTATÍSTICAS DO JOGO
+    # =========================
+    vitorias_certas = 0
+    acertos_resultado = 0
+    erros = 0
+    palpites_calculados = 0
+    jogos_pendentes = Jogo.objects.filter(encerrado=False).count()
+
+    for p in palpites:
+        jogo = p.jogo
+
+        if not jogo.encerrado:
+            continue
+
+        palpites_calculados += 1
+
+        resultado_real = (
+            "casa" if jogo.gols_casa > jogo.gols_visitante
+            else "visitante" if jogo.gols_visitante > jogo.gols_casa
+            else "empate"
+        )
+
+        resultado_palpite = (
+            "casa" if p.gols_casa > p.gols_visitante
+            else "visitante" if p.gols_visitante > p.gols_casa
+            else "empate"
+        )
+
+        # 🎯 placar exato
+        if p.gols_casa == jogo.gols_casa and p.gols_visitante == jogo.gols_visitante:
+            vitorias_certas += 1
+            acertos_resultado += 1
+            continue
+
+        # 🏆 resultado certo
+        if resultado_real == resultado_palpite:
+            acertos_resultado += 1
+        else:
+            erros += 1
+
+    # =========================
+    # JOGOS ABERTOS / FECHADOS
+    # =========================
+    jogos_encerrados = Jogo.objects.filter(encerrado=True).count()
+    jogos_abertos = Jogo.objects.filter(encerrado=False).count()
+
+    # =========================
+    # POSIÇÃO NO RANKING
+    # =========================
+    ranking_lista = list(
+        Profile.objects
+        .exclude(user__username__in=["rootmaster"])
+        .exclude(user__is_superuser=True)
+        .exclude(user__is_staff=True)
+        .order_by('-pontuacao_total')
+    )
+
+    posicao = 0
+    for i, profile in enumerate(ranking_lista, start=1):
+        if profile.user_id == usuario.id:
+            posicao = i
+            break
+
+    
+    # ESTATÍSTICAS FINAIS
+  
     estatisticas = {
         "pontos_totais": getattr(usuario.profile, "pontuacao_total", 0),
         "palpites_feitos": total_palpites,
         "total_jogos": total_jogos,
-        "erros": max(total_jogos - total_palpites, 0),
-        "acertos_cheios": 0,  # depois podemos calcular real
-        "vitorias_certas": 0,  # placeholder
-        "jogos_pendentes": max(total_jogos - total_palpites, 0),
-        "posicao_ranking": 0,  # depois podemos calcular ranking real
-        "total_participantes": Profile.objects.count()
+
+        # desempenho
+        "vitorias_certas": vitorias_certas,
+        "acertos_resultado": acertos_resultado,
+        "erros": erros,
+
+        # controle de jogos
+        "palpites_calculados": jogos_encerrados,
+        "palpites_pendentes": jogos_abertos,
+        "jogos_pendentes": jogos_pendentes,
+
+        # ranking
+        "posicao_ranking": posicao,
+        "total_participantes": Profile.objects.count(),
     }
 
     return render(request, 'campeonatos/palpites_usuario.html', {

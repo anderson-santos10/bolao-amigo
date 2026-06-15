@@ -45,6 +45,7 @@
     <!-- CONTAINER PRINCIPAL -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
 
+
         <!-- GRID DE ESTATÍSTICAS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             
@@ -85,7 +86,7 @@
                     <div class="text-yellow-500 text-xl bg-yellow-500 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-shield-check"></i></div>
                     <div>
                         <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Vitórias Certas</p>
-                        <p class="text-xs font-bold text-white">{{ estatisticas.vitorias_certas }} <span class="text-[11px] text-secundario font-normal">acertos</span></p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.acertos_resultado }} <span class="text-[11px] text-secundario font-normal">acertos</span></p>
                     </div>
                 </div>
             </div>
@@ -96,7 +97,7 @@
                     <div class="text-blue-400 text-xl bg-blue-400 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-pencil-square"></i></div>
                     <div>
                         <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Palpites Feitos</p>
-                        <p class="text-base font-black text-white">{{ estatisticas.palpites_feitos }}<span class="text-xs text-secundario font-normal"> / {{ estatisticas.total_jogos }}</span></p>
+                        <p class="text-base font-black text-white">{{ estatisticas.palpites_calculados }}<span class="text-xs text-secundario font-normal"> / {{ estatisticas.total_jogos }}</span></p>
                     </div>
                 </div>
                 <div class="subcard-box p-3 flex items-center gap-3 flex-1">
@@ -114,7 +115,7 @@
                     <div class="text-verde text-xl bg-[#3db46d] bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-bullseye"></i></div>
                     <div>
                         <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Acertos na Mosca</p>
-                        <p class="text-xs font-bold text-white">{{ estatisticas.acertos_cheios }} <span class="text-[11px] text-secundario font-normal">placares exatos</span></p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.vitorias_certas }} <span class="text-[11px] text-secundario font-normal">placares exatos</span></p>
                     </div>
                 </div>
                 <div class="subcard-box p-3 flex items-center gap-3 flex-1">
