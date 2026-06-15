@@ -11,7 +11,7 @@ class Profile(models.Model):
 
     image = models.ImageField(
         upload_to='profiles/',
-        default='profiles/default.jpg'
+        default='profiles/default.png'
     )
 
     pontuacao_total = models.IntegerField(
