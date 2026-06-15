@@ -4,225 +4,185 @@
 {% block title %}Regras do Bolão{% endblock %}
 
 {% block content %}
+<!-- Tailwind CSS para Layout Responsivo Inteligente -->
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-:root {
-    --bg-principal: #091124;
-    --bg-card: #141c2f;
-    --verde-chute: #3db46d;
-    --input-border: #232d45;
-    --texto-secundario: #7e8a9c;
-}
+    :root {
+        --bg-principal: #091124;
+        --bg-card: #141c2f;
+        --bg-subcard: #19233c;
+        --verde-chute: #3db46d;
+        --input-border: #232d45;
+        --card-border: #1f2b48;
+        --texto-secundario: #7e8a9c;
+    }
 
-/* BACKGROUND E TRATAMENTO DA FONTE */
-body {
-    background-color: var(--bg-principal);
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-}
+    body {
+        background-color: var(--bg-principal);
+    }
 
-/* TITULO PRINCIPAL */
-.page-title {
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-}
+    /* ESTILIZAÇÃO PADRÃO DO PROJETO */
+    .card-box {
+        background-color: var(--bg-card);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        transition: transform 0.2s, border-color 0.2s;
+    }
 
-.subtitle {
-    color: var(--texto-secundario);
-    font-size: 14px;
-}
+    .card-box:hover {
+        transform: translateY(-2px);
+        border-color: rgba(61, 180, 109, 0.3);
+    }
 
-/* CARDS DE REGRA */
-.rule-card {
-    background-color: var(--bg-card);
-    border: 1px solid #1f2b48;
-    border-radius: 18px;
-    padding: 22px;
-    transition: transform 0.2s, border-color 0.2s;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-}
+    .subcard-box {
+        background-color: var(--bg-subcard);
+        border: 1px solid var(--input-border);
+        border-radius: 14px;
+    }
 
-.rule-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(61, 180, 109, 0.4);
-}
-
-/* BADGES DE ETAPA */
-.badge-step {
-    background-color: rgba(61, 180, 109, 0.15);
-    color: var(--verde-chute);
-    font-weight: 800;
-    font-size: 11px;
-    padding: 4px 10px;
-    border-radius: 6px;
-    border: 1px solid rgba(61, 180, 109, 0.3);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* ICON BOX PREMIUM */
-.icon-box {
-    width: 46px;
-    height: 46px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #19233c;
-    border: 1px solid var(--input-border);
-    color: var(--verde-chute);
-    font-size: 1.25rem;
-    flex-shrink: 0;
-}
-
-/* GRID ADAPTATIVO */
-.grid-2 {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-}
-
-@media(max-width: 992px){
-    .grid-2 { grid-template-columns: 1fr; }
-    .rule-card.full-width-md { grid-column: span 1 !important; }
-}
+    /* Cores Utilitárias */
+    .text-verde { color: var(--verde-chute); }
+    .text-secundario { color: var(--texto-secundario); }
+    .border-custom { border-color: var(--input-border); }
 </style>
 
-<div class="container py-5">
+<div class="min-h-screen pb-12 text-white">
+    
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        
+        <!-- HEADER DA PÁGINA -->
+        <div class="mb-8 text-center text-md-start">
+            <h2 class="text-2xl font-black text-white tracking-wide uppercase">📘 REGRAS DO BOLÃO</h2>
+            <p class="text-secundario text-xs sm:text-sm font-medium mt-0.5">Fique por dentro do regulamento, sistema de pontuação e critérios de desempate</p>
+        </div>
 
-    <!-- HEADER DA PÁGINA -->
-    <div class="mb-5 text-center text-md-start">
-        <h2 class="page-title text-white mb-2">📘 REGRAS DO BOLÃO</h2>
-        <p class="subtitle mb-0 fw-medium">Fique por dentro do regulamento, sistema de pontuação e critérios de desempate.</p>
-    </div>
+        <!-- GRID DE REGRAS (2 Colunas no Desktop) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-    <!-- GRID DE REGRAS -->
-    <div class="grid-2">
-
-        <!-- CARD 1: COMO FUNCIONA -->
-        <div class="rule-card">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 1: COMO FUNCIONA -->
+            <div class="card-box p-6 flex gap-4 items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-controller"></i>
                 </div>
-                <div>
-                    <span class="badge-step">Regra 1</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Como Funciona</h5>
-                    <p class="mb-0 text-custom-secondary lh-base small">
+                <div class="space-y-1.5">
+                    <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Regra 1</span>
+                    <h4 class="text-base font-bold text-white uppercase tracking-wide">Como Funciona</h4>
+                    <p class="text-secundario text-xs sm:text-sm leading-relaxed font-medium">
                         Você deve preencher os seus palpites de placar para os jogos da Copa do Mundo. O objetivo é acumular a maior quantidade de pontos possível para subir no ranking geral.
                     </p>
                 </div>
             </div>
-        </div>
 
-        <!-- CARD 2: PONTUAÇÃO -->
-        <div class="rule-card">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 2: PONTUAÇÃO -->
+            <div class="card-box p-6 flex gap-4 items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-trophy"></i>
                 </div>
-                <div>
-                    <span class="badge-step">Regra 2</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Sistema de Pontuação</h5>
-                    <ul class="mb-0 text-custom-secondary ps-3 lh-base small">
-                        <li class="mb-1">🎯 <strong class="text-white">Placar Exato:</strong> Se você cravar o resultado (Ex: Palpite 2x1 / Jogo 2x1) = <b class="text-verde">3 pontos</b>.</li>
-                        <li class="mb-1">⚽ <strong class="text-white">Acertar Vencedor/Empate:</strong> Se você acertar quem ganha ou se será empate, mas errar o placar de gols = <b class="text-info">1 ponto</b>.</li>
-                        <li>❌ <strong class="text-white">Erro Total:</strong> Se errar o vencedor e o placar = <b class="text-danger">0 pontos</b>.</li>
+                <div class="space-y-1.5 w-100">
+                    <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Regra 2</span>
+                    <h4 class="text-base font-bold text-white uppercase tracking-wide">Sistema de Pontuação</h4>
+                    <ul class="text-secundario text-xs sm:text-sm space-y-2 pt-1 font-medium">
+                        <li class="flex items-start gap-2">
+                            <span class="text-base">🎯</span>
+                            <span><strong class="text-white">Placar Exato:</strong> Se você cravar o resultado exato (Ex: Palpite 2x1 / Jogo 2x1) = <b class="text-verde font-bold">3 pontos</b>.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-base">⚽</span>
+                            <span><strong class="text-white">Acertar Vencedor/Empate:</strong> Se você acertar quem ganha ou se será empate, mas errar o placar de gols = <b class="text-sky-400 font-bold">1 ponto</b>.</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-base">❌</span>
+                            <span><strong class="text-white">Erro Total:</strong> Se errar o vencedor/empate e a quantidade de gols do confronto = <b class="text-red-400 font-bold">0 pontos</b>.</span>
+                        </li>
                     </ul>
                 </div>
             </div>
-        </div>
 
-        <!-- CARD 3: PRAZO LIMITE -->
-        <div class="rule-card">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 3: PRAZO LIMITE -->
+            <div class="card-box p-6 flex gap-4 items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-clock-history"></i>
                 </div>
-                <div>
-                    <span class="badge-step">Regra 3</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Prazo de Envio</h5>
-                    <p class="mb-0 text-custom-secondary lh-base small">
+                <div class="space-y-1.5">
+                    <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Regra 3</span>
+                    <h4 class="text-base font-bold text-white uppercase tracking-wide">Prazo de Envio</h4>
+                    <p class="text-secundario text-xs sm:text-sm leading-relaxed font-medium">
                         Os palpites podem ser salvos ou alterados livremente até <strong class="text-white">as vésperas do início da rodada do grupo</strong>. Assim que o mercado travar, nenhum palpite poderá ser inserido ou modificado pelo sistema.
                     </p>
                 </div>
             </div>
-        </div>
 
-        <!-- CARD 4: TEMPO REGULAMENTAR -->
-        <div class="rule-card">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 4: TEMPO REGULAMENTAR -->
+            <div class="card-box p-6 flex gap-4 items-start">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-stopwatch"></i>
                 </div>
-                <div>
-                    <span class="badge-step">Regra 4</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Tempo Regulamentar</h5>
-                    <p class="mb-0 text-custom-secondary lh-base small">
+                <div class="space-y-1.5">
+                    <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Regra 4</span>
+                    <h4 class="text-base font-bold text-white uppercase tracking-wide">Tempo Regulamentar</h4>
+                    <p class="text-secundario text-xs sm:text-sm leading-relaxed font-medium">
                         Para fins de computação de pontos, o resultado considerado será sempre o do <strong class="text-white">tempo regulamentar (90 minutos + acréscimos)</strong>. Prorrogações e disputas por pênaltis em fases de mata-mata não contabilizam para o placar final do bolão.
                     </p>
                 </div>
             </div>
-        </div>
 
-        <!-- CARD 5: CRITÉRIOS DE DESEMPATE (FULL WIDTH) -->
-        <div class="rule-card full-width-md" style="grid-column: span 2;">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 5: CRITÉRIOS DE DESEMPATE (Ocupa as duas colunas no desktop) -->
+            <div class="card-box p-6 flex gap-4 items-start lg:col-span-2">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-diagram-3"></i>
                 </div>
-                <div class="w-100">
-                    <span class="badge-step">Regra 5</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Critérios de Desempate no Ranking</h5>
-                    <p class="mb-2 text-custom-secondary lh-base small">
-                        Caso dois ou mais participantes terminem a competição com a mesma pontuação total, o desempate na tabela do ranking seguirá estritamente a seguinte ordem de prioridade:
-                    </p>
-                    <div class="row g-2 text-custom-secondary small">
-                        <div class="col-md-4">
-                            <div class="p-2 rounded h-100" style="background-color: #19233c; border: 1px solid var(--input-border);">
-                                <strong class="text-white d-block mb-1">1º Critério</strong> Maior número de acertos de placares exatos (3 pontos).
-                            </div>
+                <div class="space-y-4 w-full">
+                    <div>
+                        <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Regra 5</span>
+                        <h4 class="text-base font-bold text-white uppercase tracking-wide mt-1.5">Critérios de Desempate no Ranking</h4>
+                        <p class="text-secundario text-xs sm:text-sm mt-1 font-medium">
+                            Caso dois ou mais participantes terminem a competição com a mesma pontuação total, o desempate na tabela do ranking seguirá estritamente a seguinte ordem de prioridade:
+                        </p>
+                    </div>
+                    
+                    <!-- Grid Interna dos Critérios -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="subcard-box p-4 flex flex-col justify-between">
+                            <span class="text-xs font-bold text-white block uppercase tracking-wider mb-1">1º Critério</span>
+                            <p class="text-secundario text-[11px] sm:text-xs leading-relaxed font-medium">Maior número de acertos de placares exatos (computando as rodadas de 3 pontos).</p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="p-2 rounded h-100" style="background-color: #19233c; border: 1px solid var(--input-border);">
-                                <strong class="text-white d-block mb-1">2º Critério</strong> Maior número de acertos de vencedor/empate (1 ponto).
-                            </div>
+                        <div class="subcard-box p-4 flex flex-col justify-between">
+                            <span class="text-xs font-bold text-white block uppercase tracking-wider mb-1">2º Critério</span>
+                            <p class="text-secundario text-[11px] sm:text-xs leading-relaxed font-medium">Maior número de acertos de vencedor ou empates (computando as rodadas de 1 ponto).</p>
                         </div>
-                        <div class="col-md-4">
-                            <div class="p-2 rounded h-100" style="background-color: #19233c; border: 1px solid var(--input-border);">
-                                <strong class="text-white d-block mb-1">3º Critério</strong> Ordem alfabética ou data de inscrição (definido pelo organizador).
-                            </div>
+                        <div class="subcard-box p-4 flex flex-col justify-between">
+                            <span class="text-xs font-bold text-white block uppercase tracking-wider mb-1">3º Critério</span>
+                            <p class="text-secundario text-[11px] sm:text-xs leading-relaxed font-medium">Ordem alfabética ou data de inscrição na plataforma (definido pelo organizador).</p>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CARD 6: PREMIAÇÃO (FULL WIDTH) -->
-        <div class="rule-card full-width-md" style="grid-column: span 2;">
-            <div class="d-flex gap-3 align-items-start">
-                <div class="icon-box">
+            <!-- CARD 6: PREMIAÇÃO (Ocupa as duas colunas no desktop) -->
+            <div class="card-box p-6 flex gap-4 items-start lg:col-span-2">
+                <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-[#19233c] border border-custom text-verde text-xl flex-shrink-0">
                     <i class="bi bi-gift"></i>
                 </div>
-                <div>
-                    <span class="badge-step">Premiação</span>
-                    <h5 class="mt-2 mb-2 text-white fw-semibold">Distribuição dos Prêmios</h5>
-                    <p class="mb-0 text-custom-secondary lh-base small">
+                <div class="space-y-1.5">
+                    <span class="inline-block bg-[#3db46d] bg-opacity-10 text-verde text-[10px] font-extrabold tracking-wider px-2.5 py-0.5 rounded border border-[#3db46d] border-opacity-20 uppercase">Premiação</span>
+                    <h4 class="text-base font-bold text-white uppercase tracking-wide">Distribuição dos Prêmios</h4>
+                    <p class="text-secundario text-xs sm:text-sm leading-relaxed font-medium">
                         Os valores arrecadados ou prêmios físicos estipulados serão entregues aos <strong class="text-white">primeiros colocados da classificação geral</strong> logo após a validação dos resultados da grande final da Copa do Mundo 2026. Toda a coordenação logística e financeira fica a cargo do administrador do grupo.
                     </p>
                 </div>
             </div>
+
+        </div>
+
+        <!-- FOOTER DA TELA -->
+        <div class="text-center mt-12 pt-4 border-t border-custom border-opacity-40">
+            <h4 class="text-verde text-lg font-black tracking-widest uppercase mb-1">BOA SORTE! 🏆</h4>
+            <p class="text-secundario text-xs font-medium">Estude os confrontos, monte sua estratégia e que vença o melhor palpiteiro!</p>
         </div>
 
     </div>
-
-    <!-- FOOTER DA TELA -->
-    <div class="text-center mt-5 pt-3">
-        <h4 class="text-verde fw-black mb-1">BOA SORTE! 🏆</h4>
-        <p class="text-custom-secondary small fw-medium mb-0">Estude os confrontos, monte sua estratégia e que vença o melhor palpiteiro!</p>
-    </div>
-
 </div>
-
-{% endblock %}
+{% endblock content %}

@@ -2,287 +2,227 @@
 {% load static %}
 
 {% block content %}
+<!-- Tailwind CSS para Layout Responsivo Premium -->
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
-:root {
-    --bg-principal: #091124;
-    --bg-card: #141c2f;
-    --verde-chute: #3db46d;
-    --input-border: #232d45;
-    --texto-secundario: #7e8a9c;
-}
+    :root {
+        --bg-principal: #091124;
+        --bg-card: #141c2f;
+        --bg-subcard: #19233c;
+        --verde-chute: #3db46d;
+        --input-border: #232d45;
+        --card-border: #1f2b48;
+        --texto-secundario: #7e8a9c;
+    }
 
-/* BACKGROUND E TRATAMENTO DA FONTE */
-body {
-    background-color: var(--bg-principal);
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-}
+    body {
+        background-color: var(--bg-principal);
+    }
 
-/* PAINÉIS DE RANKING COMPATÍVEIS */
-.ranking-box {
-    background-color: var(--bg-card);
-    border: 1px solid #1f2b48;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-}
+    /* CLASSES ESTRUTURAIS DO PROJETO */
+    .card-box {
+        background-color: var(--bg-card);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    }
 
-/* TÍTULOS */
-.title {
-    font-weight: 900;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: #ffffff;
-}
+    .subcard-box {
+        background-color: var(--bg-subcard);
+        border: 1px solid var(--input-border);
+        border-radius: 14px;
+    }
 
-/* ANIMAÇÃO SUAVE */
-@keyframes pop {
-    from { transform: translateY(12px) scale(.97); opacity: 0; }
-    to { transform: translateY(0) scale(1); opacity: 1; }
-}
+    /* Animação suave de entrada para o Pódio */
+    @keyframes premiumPop {
+        from { transform: translateY(16px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
 
-.top-anim {
-    animation: pop .5s cubic-bezier(0.16, 1, 0.3, 1);
-}
+    .podium-anim {
+        animation: premiumPop 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
 
-/* CONFIGURAÇÃO DOS AVATARES DO PODIO */
-.avatar-podio {
-    border-radius: 50%;
-    object-fit: cover;
-    display: inline-block;
-    margin: 0 auto;
-}
-
-.avatar-placeholder-podio {
-    background-color: var(--input-border);
-    color: var(--texto-secundario);
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto;
-}
-
-/* BORDAS EXCLUSIVAS DO TOP 3 */
-.gold { 
-    border: 3px solid #ffd700 !important; 
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
-}
-.silver { 
-    border: 3px solid #c0c0c0 !important; 
-    box-shadow: 0 0 15px rgba(192, 192, 192, 0.15);
-}
-.bronze { 
-    border: 3px solid #cd7f32 !important; 
-    box-shadow: 0 0 15px rgba(205, 127, 50, 0.15);
-}
-
-/* TABELA REESTILIZADA */
-.table-dark {
-    --bs-table-bg: transparent;
-    --bs-table-hover-bg: #19233c;
-    border-color: var(--input-border);
-}
-
-.table thead th {
-    color: var(--texto-secundario) !important;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--input-border);
-    padding: 14px 10px;
-}
-
-.table tbody tr {
-    border-bottom: 1px solid rgba(35, 45, 69, 0.5);
-    transition: background-color 0.2s;
-}
-
-/* BADGE DA POSIÇÃO */
-.pos {
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-/* AVATAR DENTRO DA TABELA */
-.avatar-table {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid var(--input-border);
-}
-
-.avatar-placeholder-table {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
-    background-color: var(--input-border);
-    color: var(--texto-secundario);
-    font-size: 0.75rem;
-    font-weight: 700;
-}
-
-/* LINHA DO USUÁRIO LOGADO (.me) */
-.table tbody tr.me {
-    border-left: 4px solid var(--verde-chute);
-    background-color: rgba(61, 180, 109, 0.1) !important;
-}
-
-.table tbody tr.me td {
-    color: #ffffff;
-    font-weight: 600;
-}
-
-.text-verde {
-    color: var(--verde-chute) !important;
-}
-
-.text-custom-secondary {
-    color: var(--texto-secundario);
-}
+    /* Cores e Utilitários Customizados */
+    .text-verde { color: var(--verde-chute); }
+    .text-secundario { color: var(--texto-secundario); }
+    .border-custom { border-color: var(--input-border); }
 </style>
 
-<div class="container py-4">
-
-    <div class="text-center mb-4 mt-2">
-        <h2 class="title mb-1">RANKING DO BOLÃO 2026</h2>
-        <small class="text-custom-secondary fw-medium">Classificação geral em tempo real</small>
-    </div>
-
-    <div class="ranking-box mb-4">
-        <h5 class="fw-semibold text-white mb-4" style="font-size: 1.1rem;">Top 3 do Ranking</h5>
-
-        <div class="row text-center align-items-end g-2">
-
-            <div class="col-4 top-anim">
-                {% if ranking|length > 1 %}
-                {% with p=ranking.1 %}
-
-                    {% if p.user.profile.image %}
-                        <img class="avatar-podio silver" src="{{ p.user.profile.image.url }}" style="width:75px; height:75px;">
-                    {% else %}
-                        <div class="avatar-placeholder-podio silver" style="width:75px; height:75px; font-size: 1.4rem;">
-                            <i class="bi bi-person"></i>
-                        </div>
-                    {% endif %}
-
-                    <div class="fw-semibold text-white text-truncate px-1 mt-2">🥈 {{ p.user.first_name|default:p.user.username }}</div>
-                    <small class="text-custom-secondary">{{ p.pontuacao_total }} pts</small>
-
-                {% endwith %}
-                {% else %}
-                    <div class="text-muted small py-3">Aguardando...</div>
-                {% endif %}
-            </div>
-
-            <div class="col-4 top-anim">
-                {% if ranking|length > 0 %}
-                {% with p=ranking.0 %}
-
-                    {% if p.user.profile.image %}
-                        <img class="avatar-podio gold" src="{{ p.user.profile.image.url }}" style="width:95px; height:95px;">
-                    {% else %}
-                        <div class="avatar-placeholder-podio gold" style="width:95px; height:95px; font-size: 1.8rem;">
-                            <i class="bi bi-trophy-fill text-warning"></i>
-                        </div>
-                    {% endif %}
-
-                    <div class="fw-bold text-white text-truncate px-1 mt-2" style="font-size: 1.05rem;">👑 {{ p.user.first_name|default:p.user.username }}</div>
-                    <div class="text-verde fw-black fs-5">
-                        {{ p.pontuacao_total }} pts
-                    </div>
-
-                {% endwith %}
-                {% else %}
-                    <div class="text-muted small py-3">Aguardando...</div>
-                {% endif %}
-            </div>
-
-            <div class="col-4 top-anim">
-                {% if ranking|length > 2 %}
-                {% with p=ranking.2 %}
-
-                    {% if p.user.profile.image %}
-                        <img class="avatar-podio bronze" src="{{ p.user.profile.image.url }}" style="width:75px; height:75px;">
-                    {% else %}
-                        <div class="avatar-placeholder-podio bronze" style="width:75px; height:75px; font-size: 1.4rem;">
-                            <i class="bi bi-person"></i>
-                        </div>
-                    {% endif %}
-
-                    <div class="fw-semibold text-white text-truncate px-1 mt-2">🥉 {{ p.user.first_name|default:p.user.username }}</div>
-                    <small class="text-custom-secondary">{{ p.pontuacao_total }} pts</small>
-
-                {% endwith %}
-                {% else %}
-                    <div class="text-muted small py-3">Aguardando...</div>
-                {% endif %}
-            </div>
-
-        </div>
-    </div>
-
-    <div class="ranking-box">
+<div class="min-h-screen pb-12 text-white">
+    
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         
-        <div class="table-responsive">
-            <table class="table table-dark table-hover align-middle mb-0">
-                <thead>
-                    <tr>
-                        <th style="width: 90px;">Pos</th>
-                        <th>Jogador</th>
-                        <th class="text-end" style="width: 140px;">Pontos</th>
-                    </tr>
-                </thead>
-                <tbody>
+        <!-- HEADER DA PÁGINA -->
+        <div class="mb-8 text-center md:text-left">
+            <h2 class="text-2xl font-black text-white tracking-wide uppercase">🏆 RANKING DO BOLÃO 2026</h2>
+            <p class="text-secundario text-xs sm:text-sm font-medium mt-0.5">Classificação geral dos participantes em tempo real</p>
+        </div>
 
-                {% for p in ranking %}
-                    <tr class="{% if p.user == request.user %}me{% endif %}">
+        <!-- SEÇÃO: TOP 3 (PÓDIO PREMIUM) -->
+        <div class="card-box p-6 mb-8">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-secundario mb-6 flex items-center gap-2">
+                <i class="bi bi-stars text-yellow-500"></i> Líderes da Competição
+            </h3>
 
-                        <td class="pos">
-                            {% if forloop.counter == 1 %}
-                                <span class="text-warning">🥇 1º</span>
-                            {% elif forloop.counter == 2 %}
-                                <span class="text-light">🥈 2º</span>
-                            {% elif forloop.counter == 3 %}
-                                <span style="color: #cd7f32;">🥉 3º</span>
+            <!-- Grid do Pódio Ordenado (2º, 1º, 3º) -->
+            <div class="grid grid-cols-3 items-end max-w-2xl mx-auto gap-2 sm:gap-4 pt-4">
+
+                <!-- 2º LUGAR -->
+                <div class="podium-anim flex flex-col items-center text-center" style="animation-delay: 150ms;">
+                    {% if ranking|length > 1 %}
+                        {% with p=ranking.1 %}
+                        <div class="relative group">
+                            {% if p.user.profile.image %}
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#c0c0c0] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="2º Lugar">
                             {% else %}
-                                <span class="text-custom-secondary ps-1">{{ forloop.counter }}º</span>
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#19233c] border-4 border-[#c0c0c0] flex items-center justify-center text-xl text-secundario shadow-lg"><i class="bi bi-person-fill"></i></div>
                             {% endif %}
-                        </td>
+                            <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#c0c0c0] text-gray-900 text-[10px] font-black px-2 py-0.5 rounded-full shadow">2º</span>
+                        </div>
+                        <div class="mt-3 max-w-full">
+                            <a class="text-xs sm:text-sm font-bold text-white hover:text-verde truncate block transition-colors" href="{% url 'palpites_usuario' p.user.id %}">
+                                {{ p.user.first_name|default:p.user.username }}
+                            </a>
+                            <span class="text-[11px] sm:text-xs text-secundario font-semibold block mt-0.5">{{ p.pontuacao_total }} <span class="font-normal text-[10px]">pts</span></span>
+                        </div>
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-xs text-secundario font-medium italic">Aguardando...</div>
+                    {% endif %}
+                </div>
 
-                        <td>
-                            <div class="d-flex align-items-center gap-2">
-                                {% if p.user.profile.image %}
-                                    <img src="{{ p.user.profile.image.url }}" class="avatar-table">
+                <!-- 1º LUGAR (DESTACADO) -->
+                <div class="podium-anim flex flex-col items-center text-center">
+                    {% if ranking|length > 0 %}
+                        {% with p=ranking.0 %}
+                        <div class="relative group">
+                            <!-- Coroa de Líder -->
+                            <i class="bi bi-trophy-fill text-[#ffd700] text-lg absolute -top-7 left-1/2 transform -translate-x-1/2 drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]"></i>
+                            {% if p.user.profile.image %}
+                                <img class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-[#ffd700] shadow-[0_0_20px_rgba(255,215,0,0.15)] transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="1º Lugar">
+                            {% else %}
+                                <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-[#19233c] border-4 border-[#ffd700] flex items-center justify-center text-2xl text-[#ffd700] shadow-lg"><i class="bi bi-crown-fill"></i></div>
+                            {% endif %}
+                            <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#ffd700] text-gray-900 text-[11px] font-black px-2.5 py-0.5 rounded-full shadow uppercase tracking-wider">Líder</span>
+                        </div>
+                        <div class="mt-3 max-w-full">
+                            <a class="text-sm sm:text-base font-black text-white hover:text-verde truncate block transition-colors uppercase tracking-wide" href="{% url 'palpites_usuario' p.user.id %}">
+                                {{ p.user.first_name|default:p.user.username }}
+                            </a>
+                            <span class="text-xs sm:text-sm text-verde font-bold block mt-0.5">{{ p.pontuacao_total }} <span class="text-secundario font-normal text-xs">pts</span></span>
+                        </div>
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-xs text-secundario font-medium italic">Aguardando...</div>
+                    {% endif %}
+                </div>
+
+                <!-- 3º LUGAR -->
+                <div class="podium-anim flex flex-col items-center text-center" style="animation-delay: 300ms;">
+                    {% if ranking|length > 2 %}
+                        {% with p=ranking.2 %}
+                        <div class="relative group">
+                            {% if p.user.profile.image %}
+                                <img class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover border-4 border-[#cd7f32] shadow-lg transition-transform group-hover:scale-105" src="{{ p.user.profile.image.url }}" alt="3º Lugar">
+                            {% else %}
+                                <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#19233c] border-4 border-[#cd7f32] flex items-center justify-center text-xl text-secundario shadow-lg"><i class="bi bi-person-fill"></i></div>
+                            {% endif %}
+                            <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-[#cd7f32] text-white text-[10px] font-black px-2 py-0.5 rounded-full shadow">3º</span>
+                        </div>
+                        <div class="mt-3 max-w-full">
+                            <a class="text-xs sm:text-sm font-bold text-white hover:text-verde truncate block transition-colors" href="{% url 'palpites_usuario' p.user.id %}">
+                                {{ p.user.first_name|default:p.user.username }}
+                            </a>
+                            <span class="text-[11px] sm:text-xs text-secundario font-semibold block mt-0.5">{{ p.pontuacao_total }} <span class="font-normal text-[10px]">pts</span></span>
+                        </div>
+                        {% endwith %}
+                    {% else %}
+                        <div class="text-xs text-secundario font-medium italic">Aguardando...</div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- SEÇÃO: TABELA COMPLETA DO RANKING -->
+        <div class="card-box overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    
+                    <thead>
+                        <tr class="border-b border-custom bg-white bg-opacity-[0.02]">
+                            <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario w-20 text-center">Posição</th>
+                            <th class="py-4 px-4 text-xs font-bold uppercase tracking-wider text-secundario">Jogador</th>
+                            <th class="py-4 px-5 text-xs font-bold uppercase tracking-wider text-secundario text-end w-32">Pontuação</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-[#1f2b48] divide-opacity-50">
+                        {% for p in ranking %}
+                        <!-- Linha inteiramente clicável com redirecionamento dinâmico via JS -->
+                        <tr onclick="window.location='{% url 'palpites_usuario' p.user.id %}'" 
+                            class="group cursor-pointer transition-colors hover:bg-white hover:bg-opacity-[0.03] {% if p.user == request.user %}bg-[#3db46d] bg-opacity-[0.06] border-l-4 border-l-[#3db46d]{% endif %}">
+                            
+                            <!-- Coluna Posição -->
+                            <td class="py-3.5 px-5 text-center font-bold text-sm">
+                                {% if forloop.counter == 1 %}
+                                    <span class="inline-flex items-center justify-center bg-[#ffd700] bg-opacity-10 text-[#ffd700] text-xs font-black w-7 h-7 rounded-lg border border-[#ffd700] border-opacity-20">1º</span>
+                                {% elif forloop.counter == 2 %}
+                                    <span class="inline-flex items-center justify-center bg-[#c0c0c0] bg-opacity-10 text-[#c0c0c0] text-xs font-black w-7 h-7 rounded-lg border border-[#c0c0c0] border-opacity-20">2º</span>
+                                {% elif forloop.counter == 3 %}
+                                    <span class="inline-flex items-center justify-center bg-[#cd7f32] bg-opacity-10 text-[#cd7f32] text-xs font-black w-7 h-7 rounded-lg border border-[#cd7f32] border-opacity-20">3º</span>
                                 {% else %}
-                                    <div class="avatar-placeholder-table d-flex align-items-center justify-content-center">
-                                        {{ p.user.username|slice:":2"|upper }}
-                                    </div>
+                                    <span class="text-secundario text-xs font-semibold">{{ forloop.counter }}º</span>
                                 {% endif %}
-                                <span class="fw-medium">{{ p.user.first_name|default:p.user.username }}</span>
-                            </div>
-                        </td>
+                            </td>
 
-                        <td class="text-end fw-bold text-verde">
-                            {{ p.pontuacao_total }} pts
-                        </td>
+                            <!-- Coluna Jogador -->
+                            <td class="py-3.5 px-4">
+                                <div class="flex items-center gap-3">
+                                    {% if p.user.profile.image %}
+                                        <img src="{{ p.user.profile.image.url }}" alt="Avatar" class="w-9 h-9 rounded-full object-cover border border-custom flex-shrink-0">
+                                    {% else %}
+                                        <div class="w-9 h-9 rounded-full bg-[#19233c] border border-custom flex items-center justify-center text-xs text-secundario font-bold uppercase tracking-wider flex-shrink-0">
+                                            {{ p.user.username|slice:":2" }}
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="min-w-0">
+                                        <a class="text-xs sm:text-sm font-bold text-white group-hover:text-verde transition-colors truncate block" href="{% url 'palpites_usuario' p.user.id %}">
+                                            {{ p.user.first_name|default:p.user.username }}
+                                        </a>
+                                        {% if p.user == request.user %}
+                                            <span class="text-[9px] bg-[#3db46d] bg-opacity-20 text-verde font-extrabold px-1.5 py-0.5 rounded uppercase tracking-wider">Você</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
 
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="3" class="text-center text-muted py-4">
-                            Nenhum jogador no ranking ainda.
-                        </td>
-                    </tr>
-                {% endfor %}
+                            <!-- Coluna Pontos -->
+                            <td class="py-3.5 px-5 text-end">
+                                <span class="text-sm font-black text-verde tracking-wide">
+                                    {{ p.pontuacao_total }} <span class="text-[10px] text-secundario font-normal">pts</span>
+                                </span>
+                            </td>
 
-                </tbody>
-            </table>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-secundario text-xs font-medium py-8">
+                                <i class="bi bi-info-circle d-block text-base mb-1"></i>
+                                Nenhum competidor pontuou no ranking até o momento.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
         </div>
 
     </div>
 </div>
-
 {% endblock %}

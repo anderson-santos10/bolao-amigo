@@ -1,14 +1,19 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+
 from campeonatos.models import Grupo, Jogo, Palpite
 from usuarios.models import Profile
 
+User = get_user_model()
 
 
-@login_required # Garante que request.user existe e está logado
+# =====================================================
+# FAZER PALPITES
+# =====================================================
+@login_required
 def fazer_palpites(request):
 
-    # Otimização: busca os grupos trazendo os times corretos vinculados a eles
     grupos = Grupo.objects.prefetch_related('times').all()
 
     # =====================================================
@@ -30,6 +35,7 @@ def fazer_palpites(request):
                     continue
 
                 _, jogo_id, tipo = parts
+
                 if not jogo_id.isdigit():
                     continue
 
@@ -74,7 +80,7 @@ def fazer_palpites(request):
     grupos_filtrados = []
 
     for grupo in grupos:
-        # Busca apenas os jogos pertencentes a ESTE grupo específico
+
         jogos = Jogo.objects.filter(
             campeonato=grupo.campeonato,
             time_casa__grupo=grupo
@@ -88,13 +94,10 @@ def fazer_palpites(request):
             jogo__time_casa__grupo=grupo
         ).count()
 
-        # ✔ bloqueia grupo quando já completou tudo
         if total_jogos > 0 and palpites_usuario >= total_jogos:
             continue
-        
+
         grupo.jogos = jogos
-        
-        # Filtramos explicitamente os times que pertencem a ESTE ID de grupo
         grupo.selecoes = grupo.times.filter(grupo=grupo).distinct()
 
         grupos_filtrados.append(grupo)
@@ -108,8 +111,11 @@ def fazer_palpites(request):
         "grupos": grupos_filtrados,
         "finalizado": False
     })
-    
-    
+
+
+# =====================================================
+# MEUS PALPITES
+# =====================================================
 @login_required
 def meus_palpites(request):
     palpites = Palpite.objects.select_related(
@@ -121,8 +127,8 @@ def meus_palpites(request):
     return render(request, 'campeonatos/meus_palpites.html', {
         'palpites': palpites
     })
-    
-    
+
+
 # =====================================================
 # RANKING
 # =====================================================
@@ -141,7 +147,11 @@ def ranking(request):
     return render(request, 'campeonatos/ranking.html', {
         'ranking': ranking
     })
-    
+
+
+# =====================================================
+# FINALIZAR JOGO
+# =====================================================
 def finalizar_jogo(request, jogo_id):
     jogo = Jogo.objects.get(id=jogo_id)
 
@@ -151,3 +161,39 @@ def finalizar_jogo(request, jogo_id):
     jogo.save()
 
     return redirect('admin_jogos')
+
+
+
+# PALPITES DO USUÁRIO
+
+
+def palpites_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id)
+
+    palpites = Palpite.objects.filter(
+        usuario=usuario
+    ).select_related('jogo', 'jogo__time_casa', 'jogo__time_visitante')
+
+    palpites_dict = {p.jogo_id: p for p in palpites}
+
+    total_jogos = Jogo.objects.count()
+    total_palpites = palpites.count()
+
+    # ESTATÍSTICAS (BÁSICAS)
+    estatisticas = {
+        "pontos_totais": getattr(usuario.profile, "pontuacao_total", 0),
+        "palpites_feitos": total_palpites,
+        "total_jogos": total_jogos,
+        "erros": max(total_jogos - total_palpites, 0),
+        "acertos_cheios": 0,  # depois podemos calcular real
+        "vitorias_certas": 0,  # placeholder
+        "jogos_pendentes": max(total_jogos - total_palpites, 0),
+        "posicao_ranking": 0,  # depois podemos calcular ranking real
+        "total_participantes": Profile.objects.count()
+    }
+
+    return render(request, 'campeonatos/palpites_usuario.html', {
+        'usuario_visualizado': usuario,
+        'palpites_dict': palpites_dict,
+        'estatisticas': estatisticas,
+    })

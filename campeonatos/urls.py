@@ -7,6 +7,7 @@ urlpatterns = [
     path('ranking/', views.ranking, name='ranking'),
     path('regras/', regras_bolao_view, name='regras_bolao'),
     path('meus-palpites/', views.meus_palpites, name='meus_palpites'),
+    path('usuario/<int:user_id>/palpites/', views.palpites_usuario, name='palpites_usuario')
 ]
 
 

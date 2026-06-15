@@ -1,0 +1,168 @@
+{% extends 'usuarios/base.html' %}
+{% load static %}
+
+{% block title %}Palpites de {{ usuario_visualizado.first_name|default:usuario_visualizado.username }}{% endblock %}
+
+{% block content %}
+<!-- Tailwind CSS para Layout Responsivo Premium -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+    :root {
+        --bg-principal: #091124;
+        --bg-card: #141c2f;
+        --bg-subcard: #19233c;
+        --verde-chute: #3db46d;
+        --input-border: #232d45;
+        --card-border: #1f2b48;
+        --texto-secundario: #7e8a9c;
+    }
+
+    body {
+        background-color: var(--bg-principal);
+    }
+
+    .card-box {
+        background-color: var(--bg-card);
+        border: 1px solid var(--card-border);
+        border-radius: 20px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+    }
+
+    .subcard-box {
+        background-color: var(--bg-subcard);
+        border: 1px solid var(--input-border);
+        border-radius: 14px;
+    }
+
+    .text-verde { color: var(--verde-chute); }
+    .text-secundario { color: var(--texto-secundario); }
+    .border-custom { border-color: var(--input-border); }
+</style>
+
+<div class="min-h-screen pb-12 text-white">
+    
+    <!-- CONTAINER PRINCIPAL -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+        <!-- GRID DE ESTATÍSTICAS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            
+            <!-- Card Perfil Resumido -->
+            <div class="card-box p-5 flex items-center gap-4">
+                {% if usuario_visualizado.profile.image %}
+                    <img src="{{ usuario_visualizado.profile.image.url }}" alt="Foto do Usuário" class="w-12 h-12 rounded-full object-cover border-2 border-[#3db46d] flex-shrink-0">
+                {% else %}
+                    <div class="w-12 h-12 rounded-full bg-[#19233c] border-2 border-[#3db46d] flex items-center justify-center text-lg text-secundario flex-shrink-0">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                {% endif %}
+                <div class="min-w-0">
+                    <h3 class="text-sm font-bold text-white uppercase truncate">
+                        {{ usuario_visualizado.get_full_name|default:usuario_visualizado.username }}
+                    </h3>
+                    <p class="text-[11px] text-secundario font-medium">Desde {{ usuario_visualizado.date_joined|date:"M Y" }}</p>
+                    <p class="text-xs font-semibold text-white mt-1 uppercase tracking-wider">
+                        Ranking: <i class="bi bi-trophy-fill text-[#ffd700] text-lg"></i>
+                <span class="text-xs font-bold uppercase tracking-wider text-[#ffd700]">
+                    Posição: {{ estatisticas.posicao_ranking }}º
+                </span>
+                        <span class="text-[10px] font-normal text-secundario block sm:inline">de {{ estatisticas.total_participantes }}</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Bloco Pontos / Vitórias -->
+            <div class="flex flex-col gap-3">
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-verde text-xl bg-[#3db46d] bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-lightning-charge-fill"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Pontos Totais</p>
+                        <p class="text-base font-black text-white">{{ estatisticas.pontos_totais }} <span class="text-xs text-secundario font-normal">pts</span></p>
+                    </div>
+                </div>
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-yellow-500 text-xl bg-yellow-500 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-shield-check"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Vitórias Certas</p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.vitorias_certas }} <span class="text-[11px] text-secundario font-normal">acertos</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloco Palpites / Erros -->
+            <div class="flex flex-col gap-3">
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-blue-400 text-xl bg-blue-400 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-pencil-square"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Palpites Feitos</p>
+                        <p class="text-base font-black text-white">{{ estatisticas.palpites_feitos }}<span class="text-xs text-secundario font-normal"> / {{ estatisticas.total_jogos }}</span></p>
+                    </div>
+                </div>
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-red-500 text-xl bg-red-500 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-x-circle-fill"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Erros</p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.erros }} <span class="text-[11px] text-secundario font-normal">incorretos</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloco Na Mosca / Restantes -->
+            <div class="flex flex-col gap-3">
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-verde text-xl bg-[#3db46d] bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-bullseye"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Acertos na Mosca</p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.acertos_cheios }} <span class="text-[11px] text-secundario font-normal">placares exatos</span></p>
+                    </div>
+                </div>
+                <div class="subcard-box p-3 flex items-center gap-3 flex-1">
+                    <div class="text-purple-400 text-xl bg-purple-400 bg-opacity-10 p-2 rounded-lg flex items-center justify-center"><i class="bi bi-calendar-event"></i></div>
+                    <div>
+                        <p class="text-[10px] text-secundario font-bold uppercase tracking-wider">Jogos Restantes</p>
+                        <p class="text-xs font-bold text-white">{{ estatisticas.jogos_pendentes }} <span class="text-[11px] text-secundario font-normal">pendentes</span></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SEÇÃO DE PALPITES -->
+        <div class="card-box p-6">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-secundario mb-4 flex items-center gap-2">
+                <i class="bi bi-card-list"></i> Histórico de Palpites
+            </h3>
+
+            {% if palpites_dict %}
+                <div class="space-y-3">
+                    {% for jogo_id, palpite in palpites_dict.items %}
+                    <div class="subcard-box p-4 flex justify-between items-center transition-colors hover:bg-white hover:bg-opacity-[0.01]">
+                        
+                        <div class="min-w-0">
+                            <p class="font-bold text-sm sm:text-base text-white truncate pr-2">
+                                {{ palpite.jogo.time_casa.nome }} <span class="text-secundario font-normal px-1">vs</span> {{ palpite.jogo.time_visitante.nome }}
+                            </p>
+                            <p class="text-secundario text-[11px] mt-0.5">
+                                Identificador do Jogo: #{{ palpite.jogo.id }}
+                            </p>
+                        </div>
+
+                        <div class="text-verde font-black text-base sm:text-lg tracking-wider bg-[#3db46d] bg-opacity-5 px-3 py-1.5 rounded-lg border border-[#3db46d] border-opacity-10 whitespace-nowrap">
+                            {{ palpite.gols_casa }} - {{ palpite.gols_visitante }}
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center text-secundario text-sm py-12">
+                    <i class="bi bi-info-circle text-2xl block mb-2 opacity-60"></i>
+                    Este usuário ainda não registrou nenhum palpite no sistema.
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}
