@@ -8,19 +8,19 @@ from django.contrib.auth import update_session_auth_hash
 from .models import Profile
 
 
-# =====================================================
+
 # LOGIN
-# =====================================================
+
 def login_view(request):
 
     if request.method == 'POST':
 
-        email = request.POST.get('email')
+        username = request.POST.get('username')
         senha = request.POST.get('password')
 
         usuario = authenticate(
             request,
-            username=email,
+            username=username,
             password=senha
         )
 
@@ -28,7 +28,7 @@ def login_view(request):
             login(request, usuario)
             return redirect('dashboard')
 
-        messages.error(request, 'E-mail ou senha inválidos.')
+        messages.error(request, 'Usuário ou senha inválidos.')
 
     return render(request, 'usuarios/login.html')
 

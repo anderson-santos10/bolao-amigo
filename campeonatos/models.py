@@ -51,6 +51,7 @@ class Time(models.Model):
 
 
 class Jogo(models.Model):
+    codigo_jogo = models.CharField(max_length=20, unique=True, null=True, blank=True)
     campeonato = models.ForeignKey(
         Campeonato,
         on_delete=models.CASCADE,
