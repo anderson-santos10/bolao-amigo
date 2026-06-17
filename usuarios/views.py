@@ -54,22 +54,25 @@ def get_posicao_usuario(ranking, user):
 def dashboard_view(request):
 
     ranking = list(
-    Profile.objects
-    .select_related('user')
-    .exclude(user__username="rootmaster")  # remove rootmaster
-    .exclude(user__is_superuser=True)      # opcional (mais seguro)
-    .order_by('-pontuacao_total')
+        Profile.objects
+        .select_related('user')
+        .exclude(user__username="rootmaster")
+        .exclude(user__is_superuser=True)
+        .order_by('-pontuacao_total')
     )
 
-    # garante profile do usuário
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-
-    # cria ranking mínimo seguro
+    # Pódio
     top1 = ranking[0] if len(ranking) > 0 else None
     top2 = ranking[1] if len(ranking) > 1 else None
     top3 = ranking[2] if len(ranking) > 2 else None
 
-    # posição correta (mais seguro)
+    # Ranking do 4º ao 10º
+    ranking_geral = ranking[3:10]
+
+    # Profile do usuário
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    # Posição do usuário
     user_rank = None
     for i, p in enumerate(ranking, start=1):
         if p.user_id == request.user.id:
@@ -77,7 +80,7 @@ def dashboard_view(request):
             break
 
     return render(request, 'usuarios/dashboard.html', {
-        'ranking': ranking,
+        'ranking': ranking_geral,
         'top1': top1,
         'top2': top2,
         'top3': top3,

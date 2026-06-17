@@ -4,7 +4,6 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<!-- Tailwind CSS Engine -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -41,7 +40,6 @@
 <div class="min-h-screen pb-12 text-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
 
-        <!-- HEADER -->
         <div class="mb-8 text-center md:text-left">
             <h2 class="text-2xl sm:text-3xl font-black text-white tracking-wide uppercase flex items-center justify-center md:justify-start gap-2">
                 <span>🏆</span> DASHBOARD
@@ -49,15 +47,13 @@
             <p class="text-[#7e8a9c] text-xs sm:text-sm font-medium mt-0.5">Acompanhe a classificação e a liderança em tempo real</p>
         </div>
 
-        <!-- SEÇÃO DO PÓDIO TOP 3 -->
         <div class="bg-[#141c2f] border border-[#232d45] rounded-2xl p-5 sm:p-6 shadow-xl mb-6">
             <h5 class="font-black text-white text-xs sm:text-sm tracking-widest uppercase mb-6 text-[#7e8a9c]">LÍDERES DA COMPETIÇÃO</h5>
 
             <div class="flex items-end justify-center gap-1 sm:gap-4 max-w-2xl mx-auto pt-4">
 
-                <!-- 2º LUGAR -->
                 <div class="w-1/3 text-center animate-pop flex flex-col items-center">
-                    {% with user=ranking.1 %}
+                    {% with user=top2 %}
                     {% if user %}
                         <div class="relative inline-block mb-3">
                             {% if user.user.profile.image %}
@@ -79,9 +75,8 @@
                     {% endwith %}
                 </div>
 
-                <!-- 1º LUGAR (CENTRALIZADO E MAIOR) -->
                 <div class="w-1/3 text-center animate-pop flex flex-col items-center">
-                    {% with user=ranking.0 %}
+                    {% with user=top1 %}
                     {% if user %}
                         <div class="relative inline-block mb-3">
                             {% if user.user.profile.image %}
@@ -103,9 +98,8 @@
                     {% endwith %}
                 </div>
 
-                <!-- 3º LUGAR -->
                 <div class="w-1/3 text-center animate-pop flex flex-col items-center">
-                    {% with user=ranking.2 %}
+                    {% with user=top3 %}
                     {% if user %}
                         <div class="relative inline-block mb-3">
                             {% if user.user.profile.image %}
@@ -130,9 +124,8 @@
             </div>
         </div>
 
-        <!-- SEÇÃO DA TABELA COMPLETA -->
         <div class="bg-[#141c2f] border border-[#232d45] rounded-2xl p-4 sm:p-6 shadow-xl">
-            <h5 class="font-black text-white text-xs sm:text-sm tracking-widest uppercase mb-4 text-[#7e8a9c]">RANKING GERAL</h5>
+            <h5 class="font-black text-white text-xs sm:text-sm tracking-widest uppercase mb-4 text-[#7e8a9c]">RANKING GERAL (4º AO 10º)</h5>
 
             <div class="overflow-x-auto rounded-xl border border-[#232d45]/60">
                 <table class="w-full text-left border-collapse align-middle">
@@ -146,25 +139,18 @@
                     <tbody class="divide-y divide-[#232d45]/40">
 
                     {% for p in ranking %}
+                        {% if forloop.counter|add:3 <= 10 %}
                         <tr class="transition-colors hover:bg-[#19233c]/30 
                             {% if p.user == request.user %}
                                 border-l-[4px] border-l-[#3db46d] bg-[#3db46d]/10 text-white font-semibold
                             {% endif %}">
                             
-                            <!-- POSIÇÃO -->
                             <td class="py-3.5 px-4 font-black text-center text-xs sm:text-sm">
-                                {% if forloop.counter == 1 %}
-                                    <span class="text-amber-400 bg-amber-400/10 px-2 py-0.5 rounded border border-amber-400/20">1º</span>
-                                {% elif forloop.counter == 2 %}
-                                    <span class="text-zinc-400 bg-zinc-400/10 px-2 py-0.5 rounded border border-zinc-400/20">2º</span>
-                                {% elif forloop.counter == 3 %}
-                                    <span class="text-amber-700 bg-amber-700/10 px-2 py-0.5 rounded border border-amber-700/20">3º</span>
-                                {% else %}
-                                    <span class="text-[#7e8a9c] opacity-80">{{ forloop.counter }}º</span>
-                                {% endif %}
+                                <span class="text-[#7e8a9c] opacity-80">
+                                    {{ forloop.counter|add:3 }}º
+                                </span>
                             </td>
 
-                            <!-- USER DATA -->
                             <td class="py-3.5 px-3">
                                 <div class="flex items-center gap-3">
                                     {% if p.user.profile.image %}
@@ -186,11 +172,11 @@
                                 </div>
                             </td>
 
-                            <!-- PONTOS -->
                             <td class="py-3.5 px-4 text-end font-black text-sm sm:text-base text-[#3db46d]">
                                 {{ p.pontuacao_total }} <span class="text-[#7e8a9c] font-medium text-[10px] uppercase ml-0.5">pts</span>
                             </td>
                         </tr>
+                        {% endif %}
                     {% empty %}
                         <tr>
                             <td colspan="3" class="text-center text-[#7e8a9c] py-12 px-4 text-xs sm:text-sm font-medium">
