@@ -14,3 +14,4 @@ pycparser==3.0
 pypdfium2==5.9.0
 sqlparse==0.5.5
 tzdata==2026.2
+whitenoise==6.12.0
