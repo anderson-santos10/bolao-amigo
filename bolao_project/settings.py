@@ -4,13 +4,18 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = "django-insecure-95%=%7n40_=82!o=c9b#$s&4*kx$0sr0ofu%ipym21vq@ykq6i"
-DEBUG = True
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-95%=%7n40_=82!o=c9b#$s&4*kx$0sr0ofu%ipym21vq@ykq6i"
+)
+
+DEBUG = False
 
 ALLOWED_HOSTS = [
-    ".railway.app",
+    "bolao-amigo-production.up.railway.app",
+    "bolaoamigo.railway.app",
     "localhost",
-    "127.0.0.1"
+    "127.0.0.1",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -36,6 +41,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # <- falta isso
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -43,6 +49,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = "bolao_project.urls"
 
@@ -82,8 +90,9 @@ TIME_ZONE = "America/Sao_Paulo"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
