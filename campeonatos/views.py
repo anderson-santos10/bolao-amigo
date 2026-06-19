@@ -156,7 +156,6 @@ def ranking(request):
         vitorias_certas = 0
         acertos_cheios = 0
         erros = 0
-
         jogos_encerrados = 0
 
         for p in palpites:
@@ -167,16 +166,15 @@ def ranking(request):
 
             jogos_encerrados += 1
 
-            # 🎯 placar exato
+            # 🎯 Acertou placar exato (NA MOSCA)
             if (
                 p.gols_casa == jogo.gols_casa and
                 p.gols_visitante == jogo.gols_visitante
             ):
-                vitorias_certas += 1
                 acertos_cheios += 1
                 continue
 
-            # 🧠 resultado do jogo real
+            # 🧠 Resultado real
             if jogo.gols_casa > jogo.gols_visitante:
                 resultado_real = "casa"
             elif jogo.gols_casa < jogo.gols_visitante:
@@ -184,7 +182,7 @@ def ranking(request):
             else:
                 resultado_real = "empate"
 
-            # 🧠 resultado do palpite
+            # 🧠 Resultado do palpite
             if p.gols_casa > p.gols_visitante:
                 resultado_palpite = "casa"
             elif p.gols_casa < p.gols_visitante:
@@ -192,13 +190,12 @@ def ranking(request):
             else:
                 resultado_palpite = "empate"
 
-            # 🧮 vitória (acertou resultado, mesmo sem placar exato)
+            # 🧮 Acertou vencedor mas não o placar
             if resultado_palpite == resultado_real:
                 vitorias_certas += 1
             else:
                 erros += 1
 
-        # 📊 pendentes (total jogos - palpites válidos)
         total_jogos = Jogo.objects.filter(encerrado=True).count()
         jogos_pendentes = max(total_jogos - jogos_encerrados, 0)
 
