@@ -2,6 +2,7 @@ asgiref==3.11.1
 cffi==2.0.0
 charset-normalizer==3.4.7
 cryptography==49.0.0
+decouple==0.0.7
 Django==5.2.15
 et_xmlfile==2.0.0
 gunicorn==26.0.0

@@ -1,12 +1,13 @@
+from decouple import config
 from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY
-SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-95%=%7n40_=82!o=c9b#$s&4*kx$0sr0ofu%ipym21vq@ykq6i")
+SECRET_KEY = config("SECRET_KEY")
 
-DEBUG = False
+DEBUG = config('DEBUG', cast=bool)
 
 ALLOWED_HOSTS = [
     "bolao-amigo-production.up.railway.app",
@@ -35,6 +36,10 @@ INSTALLED_APPS = [
     "campeonatos.apps.CampeonatosConfig",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("whitenoise.runserver_nostatic")
+    
+
 # MIDDLEWARE
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -46,8 +51,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 ROOT_URLCONF = "bolao_project.urls"
 
@@ -93,6 +96,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
