@@ -118,16 +118,24 @@ def fazer_palpites(request):
 # =====================================================
 @login_required
 def meus_palpites(request):
-    palpites = Palpite.objects.select_related(
-        'jogo',
-        'jogo__time_casa',
-        'jogo__time_visitante'
-    ).filter(usuario=request.user).order_by('-criado_em')
+    palpites = (
+        Palpite.objects
+        .select_related(
+            'jogo',
+            'jogo__time_casa',
+            'jogo__time_casa__grupo',
+            'jogo__time_visitante'
+        )
+        .filter(usuario=request.user)
+        .order_by(
+            'jogo__time_casa__grupo__nome',
+            'jogo__data_jogo'
+        )
+    )
 
     return render(request, 'campeonatos/meus_palpites.html', {
         'palpites': palpites
     })
-
 
 # =====================================================
 # RANKING
@@ -236,13 +244,22 @@ def palpites_usuario(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
 
     # =========================
-    # PALPITES DO USUÁRIO
+    # PALPITES DO USUÁRIO (ORDENADOS POR GRUPO)
     # =========================
-    palpites = Palpite.objects.filter(
-        usuario=usuario
-    ).select_related('jogo', 'jogo__time_casa', 'jogo__time_visitante')
-
-    palpites_dict = {p.jogo_id: p for p in palpites}
+    palpites = (
+        Palpite.objects
+        .filter(usuario=usuario)
+        .select_related(
+            'jogo',
+            'jogo__time_casa',
+            'jogo__time_casa__grupo',
+            'jogo__time_visitante'
+        )
+        .order_by(
+            'jogo__time_casa__grupo__nome',
+            'jogo__data_jogo'
+        )
+    )
 
     total_jogos = Jogo.objects.count()
     total_palpites = palpites.count()
@@ -276,13 +293,13 @@ def palpites_usuario(request, user_id):
             else "empate"
         )
 
-        # 🎯 placar exato
+        # placar exato
         if p.gols_casa == jogo.gols_casa and p.gols_visitante == jogo.gols_visitante:
             vitorias_certas += 1
             acertos_resultado += 1
             continue
 
-        # 🏆 resultado certo
+        # resultado certo
         if resultado_real == resultado_palpite:
             acertos_resultado += 1
         else:
@@ -311,31 +328,22 @@ def palpites_usuario(request, user_id):
             posicao = i
             break
 
-    
-    # ESTATÍSTICAS FINAIS
-  
     estatisticas = {
         "pontos_totais": getattr(usuario.profile, "pontuacao_total", 0),
         "palpites_feitos": total_palpites,
         "total_jogos": total_jogos,
-
-        # desempenho
         "vitorias_certas": vitorias_certas,
         "acertos_resultado": acertos_resultado,
         "erros": erros,
-
-        # controle de jogos
         "palpites_calculados": jogos_encerrados,
         "palpites_pendentes": jogos_abertos,
         "jogos_pendentes": jogos_pendentes,
-
-        # ranking
         "posicao_ranking": posicao,
         "total_participantes": Profile.objects.count(),
     }
 
     return render(request, 'campeonatos/palpites_usuario.html', {
         'usuario_visualizado': usuario,
-        'palpites_dict': palpites_dict,
+        'palpites': palpites,
         'estatisticas': estatisticas,
     })

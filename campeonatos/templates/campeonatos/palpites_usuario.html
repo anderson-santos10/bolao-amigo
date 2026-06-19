@@ -4,7 +4,6 @@
 {% block title %}Palpites de {{ usuario_visualizado.first_name|default:usuario_visualizado.username }}{% endblock %}
 
 {% block content %}
-<!-- Tailwind CSS para Layout Responsivo Premium -->
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
@@ -18,15 +17,13 @@
         --texto-secundario: #7e8a9c;
     }
 
-    body {
-        background-color: var(--bg-principal);
-    }
+    body { background-color: var(--bg-principal); }
 
     .card-box {
         background-color: var(--bg-card);
         border: 1px solid var(--card-border);
         border-radius: 20px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        box-shadow: 0 8px 24px rgba(0,0,0,.16);
     }
 
     .subcard-box {
@@ -35,24 +32,32 @@
         border-radius: 14px;
     }
 
+    .grupo-header {
+        background-color: var(--bg-subcard);
+        border: 1px solid var(--input-border);
+        border-radius: 12px;
+        padding: 10px 14px;
+    }
+
+    .bandeira {
+        width: 24px;
+        height: 16px;
+        object-fit: cover;
+        border-radius: 3px;
+    }
+
     .text-verde { color: var(--verde-chute); }
     .text-secundario { color: var(--texto-secundario); }
-    .border-custom { border-color: var(--input-border); }
 </style>
 
 <div class="min-h-screen pb-12 text-white">
-    
-    <!-- CONTAINER PRINCIPAL -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-
-
-        <!-- GRID DE ESTATÍSTICAS -->
+     <!-- GRID DE ESTATÍSTICAS -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             
             <!-- Card Perfil Resumido -->
-            <div class="card-box p-5 flex items-center gap-4">
+            <div class="card-box p-5 flex items-center gap-10">
                 {% if usuario_visualizado.profile.image %}
-                    <img src="{{ usuario_visualizado.profile.image.url }}" alt="Foto do Usuário" class="w-12 h-12 rounded-full object-cover border-2 border-[#3db46d] flex-shrink-0">
+                    <img src="{{ usuario_visualizado.profile.image.url }}" alt="Foto do Usuário" class="w-24 h-24 rounded-full object-cover border-2 border-[#3db46d] flex-shrink-0">
                 {% else %}
                     <div class="w-12 h-12 rounded-full bg-[#19233c] border-2 border-[#3db46d] flex items-center justify-center text-lg text-secundario flex-shrink-0">
                         <i class="bi bi-person-fill"></i>
@@ -128,37 +133,92 @@
             </div>
 
         </div>
-
-        <!-- SEÇÃO DE PALPITES -->
+        <!-- SEÇÃO DE HISTÓRICO DE PALPITES -->
         <div class="card-box p-6">
-            <h3 class="text-xs font-bold uppercase tracking-wider text-secundario mb-4 flex items-center gap-2">
-                <i class="bi bi-card-list"></i> Histórico de Palpites
+            <h3 class="text-xs font-bold uppercase tracking-wider text-secundario mb-4">
+                Histórico de Palpites
             </h3>
 
-            {% if palpites_dict %}
-                <div class="space-y-3">
-                    {% for jogo_id, palpite in palpites_dict.items %}
-                    <div class="subcard-box p-4 flex justify-between items-center transition-colors hover:bg-white hover:bg-opacity-[0.01]">
-                        
-                        <div class="min-w-0">
-                            <p class="font-bold text-sm sm:text-base text-white truncate pr-2">
-                                {{ palpite.jogo.time_casa.nome }} <span class="text-secundario font-normal px-1">vs</span> {{ palpite.jogo.time_visitante.nome }}
-                            </p>
-                            <p class="text-secundario text-[11px] mt-0.5">
-                                Identificador do Jogo: #{{ palpite.jogo.id }}
-                            </p>
-                        </div>
+            {% if palpites %}
+                {% regroup palpites by jogo.time_casa.grupo as grupo_list %}
 
-                        <div class="text-verde font-black text-base sm:text-lg tracking-wider bg-[#3db46d] bg-opacity-5 px-3 py-1.5 rounded-lg border border-[#3db46d] border-opacity-10 whitespace-nowrap">
-                            {{ palpite.gols_casa }} - {{ palpite.gols_visitante }}
-                        </div>
+                <!-- Grid dinâmico: 1 coluna no mobile, 3 em tablets e 4 em telas grandes -->
+                <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 items-start">
+                    {% for grupo in grupo_list %}
+                        <div class="block subcard-box p-3 bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.04)] rounded-xl h-full">
+                            
+                            <!-- Cabeçalho do Grupo -->
+                            <div class="grupo-header mb-3 flex justify-between items-center">
+                                <span class="font-bold tracking-wide text-xs">GRUPO {{ grupo.grouper }}</span>
+                                <span class="text-[11px] text-secundario font-medium">
+                                    {{ grupo.list|length }} {% if grupo.list|length == 1 %}jogo{% else %}jogos{% endif %}
+                                </span>
+                            </div>
 
-                    </div>
+                            <!-- Lista de Confrontos Internos -->
+                            <div class="space-y-2">
+                                {% for palpite in grupo.list %}
+                                    <div class="p-2 border-b border-[rgba(255,255,255,0.05)] last:border-none">
+                                        <div class="flex items-center justify-between gap-1">
+
+                                            <!-- Mandante (Time Casa) -->
+                                            <div class="flex items-center gap-1.5 w-[42%] text-left min-w-0">
+                                                {% if palpite.jogo.time_casa.codigo_pais %}
+                                                    <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_casa.codigo_pais|lower }}.png"
+                                                         class="bandeira flex-shrink-0 w-5 h-3.5" 
+                                                         alt="{{ palpite.jogo.time_casa.nome }}">
+                                                {% endif %}
+                                                <span class="truncate text-xs font-semibold">
+                                                    {{ palpite.jogo.time_casa.nome }}
+                                                </span>
+                                            </div>
+
+                                            <!-- Marcador / Placar -->
+                                            <div class="font-black text-sm whitespace-nowrap text-center w-[16%] flex justify-center items-center">
+                                                <span>{{ palpite.gols_casa }}</span>
+                                                <span class="text-secundario text-[10px] mx-1 font-normal">x</span>
+                                                <span>{{ palpite.gols_visitante }}</span>
+                                            </div>
+
+                                            <!-- Visitante -->
+                                            <div class="flex items-center justify-end gap-1.5 w-[42%] text-right min-w-0">
+                                                <span class="truncate text-xs font-semibold">
+                                                    {{ palpite.jogo.time_visitante.nome }}
+                                                </span>
+                                                {% if palpite.jogo.time_visitante.codigo_pais %}
+                                                    <img src="https://flagcdn.com/w40/{{ palpite.jogo.time_visitante.codigo_pais|lower }}.png"
+                                                         class="bandeira flex-shrink-0 w-5 h-3.5"
+                                                         alt="{{ palpite.jogo.time_visitante.nome }}">
+                                                {% endif %}
+                                            </div>
+
+                                        </div>
+
+                                        <!-- Badge de Pontos ganhas no confronto -->
+                                        {% if palpite.jogo.encerrado %}
+                                            <div class="text-center pt-1">
+                                                {% if palpite.pontos > 0 %}
+                                                    <small class="text-green-400 font-bold text-[10px]">
+                                                        +{{ palpite.pontos }} pts
+                                                    </small>
+                                                {% else %}
+                                                    <small class="text-rose-400 text-[10px]">
+                                                        0 pts
+                                                    </small>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
                     {% endfor %}
                 </div>
+
             {% else %}
+                <!-- Layout de fallback sem dados -->
                 <div class="text-center text-secundario text-sm py-12">
-                    <i class="bi bi-info-circle text-2xl block mb-2 opacity-60"></i>
+                    <i class="bi bi-info-circle text-3xl block mb-3 opacity-60 text-amber-500"></i>
                     Este usuário ainda não registrou nenhum palpite no sistema.
                 </div>
             {% endif %}
