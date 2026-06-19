@@ -34,17 +34,9 @@ class Grupo(models.Model):
 class Time(models.Model):
     nome = models.CharField(max_length=100)
 
-    codigo_pais = models.CharField(
-        max_length=2
-    )
-
-    grupo = models.ForeignKey(
-        Grupo,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='times'
-    )
+    codigo_pais = models.CharField(max_length=2)
+    grupo = models.ForeignKey(Grupo,
+        on_delete=models.SET_NULL, null=True, blank=True, related_name='times')
 
     def __str__(self):
         return self.nome
