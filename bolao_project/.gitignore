@@ -1,0 +1,62 @@
+# =========================
+# PYTHON
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# =========================
+# DJANGO
+# =========================
+*.log
+local_settings.py
+
+# Banco local (NÃO subir)
+db.sqlite3
+db.sqlite3-journal
+
+# Media (uploads de usuários)
+media/
+
+# Static coletado pelo collectstatic
+staticfiles/
+
+# Cache / testes
+.pytest_cache/
+.coverage
+htmlcov/
+
+# =========================
+# ENV / SECRETS
+# =========================
+.env
+.env.*
+*.env
+
+# Nunca subir secrets
+secrets.json
+
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# BACKUPS
+# =========================
+*.bak
+*.backup
+*.old

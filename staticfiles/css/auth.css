@@ -1,0 +1,156 @@
+/* ========================================
+   AUTENTICAÇÃO
+======================================== */
+
+.auth-page{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+/* CARD */
+
+.auth-card{
+
+    background:rgba(15,23,42,.65);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.30);
+}
+
+/* LOGO */
+
+.auth-logo{
+
+    color:var(--primary);
+
+    font-size:2.2rem;
+
+    font-weight:800;
+
+    letter-spacing:2px;
+}
+
+/* TITULOS */
+
+.auth-title{
+
+    color:var(--text-main);
+
+    font-size:2rem;
+
+    font-weight:700;
+}
+
+.auth-subtitle{
+
+    color:var(--text-muted);
+
+    font-size:1rem;
+}
+
+/* LABELS */
+
+.auth-card .form-label{
+
+    color:var(--text-main);
+
+    font-weight:600;
+
+    margin-bottom:8px;
+}
+
+/* INPUTS */
+
+.auth-card .form-control{
+
+    height:58px;
+
+    border-radius:14px;
+}
+
+/* INPUT GROUP */
+
+.auth-card .input-group-text{
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:var(--text-muted);
+
+    border-radius:14px 0 0 14px;
+}
+
+/* LINKS */
+
+.auth-link{
+
+    color:var(--primary);
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.auth-link:hover{
+
+    color:var(--primary-hover);
+}
+
+/* BOTÕES */
+
+.auth-card .btn-success{
+
+    height:58px;
+
+    border-radius:14px;
+
+    font-weight:700;
+}
+
+.auth-card .btn-outline-success{
+
+    height:58px;
+
+    border-radius:14px;
+
+    font-weight:600;
+}
+
+/* ALERTAS */
+
+.auth-card .alert{
+
+    border-radius:14px;
+}
+
+/* RESPONSIVO */
+
+@media(max-width:991px){
+
+    .auth-card{
+
+        border-radius:20px;
+    }
+
+    .auth-logo{
+
+        font-size:1.8rem;
+    }
+
+    .auth-title{
+
+        font-size:1.6rem;
+    }
+
+}

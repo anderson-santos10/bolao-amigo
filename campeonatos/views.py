@@ -134,6 +134,7 @@ def meus_palpites(request):
 # =====================================================
 EXCLUDED_USERS = ["rootmaster"]
 
+@login_required
 def ranking(request):
 
     ranking_base = Profile.objects.select_related('user').exclude(
@@ -233,7 +234,7 @@ def finalizar_jogo(request, jogo_id):
 # PALPITES DO USUÁRIO
 User = get_user_model()
 
-
+@login_required
 def palpites_usuario(request, user_id):
     usuario = get_object_or_404(User, id=user_id)
 

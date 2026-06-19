@@ -32,7 +32,7 @@ def login_view(request):
 
     return render(request, 'usuarios/login.html')
 
-
+@login_required
 def regras_bolao_view(request):
     return render(request, 'campeonatos/regras.html')
 

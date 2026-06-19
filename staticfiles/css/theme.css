@@ -1,0 +1,319 @@
+:root{
+
+    --bg-main:#020817;
+    --bg-secondary:#08162e;
+
+    --bg-sidebar:rgba(15,23,42,.85);
+    --bg-card:rgba(15,23,42,.70);
+
+    --primary:#59d97b;
+    --primary-hover:#6fe88d;
+
+    --text-main:#f8fafc;
+    --text-muted:#94a3b8;
+
+    --border-color:rgba(255,255,255,.08);
+
+}
+
+/* ==========================
+   FUNDO GLOBAL
+========================== */
+
+body{
+
+    min-height:100vh;
+
+    background:
+    radial-gradient(
+        circle at top left,
+        #0c3f8f 0%,
+        #071a3a 35%,
+        #020817 100%
+    );
+
+    color:var(--text-main);
+
+    font-family:
+        Inter,
+        Segoe UI,
+        Arial,
+        sans-serif;
+}
+
+/* ==========================
+   TITULOS
+========================== */
+
+.page-title{
+
+    font-size:32px;
+    font-weight:800;
+
+    color:var(--text-main);
+
+    margin-bottom:25px;
+
+    letter-spacing:-0.5px;
+}
+
+/* ==========================
+   CARDS
+========================== */
+
+.app-card{
+
+    background:var(--bg-card);
+
+    backdrop-filter:blur(20px);
+
+    border:1px solid var(--border-color);
+
+    border-radius:24px;
+
+    padding:24px;
+
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.30);
+}
+
+/* ==========================
+   CARD AUTH
+========================== */
+
+.auth-card{
+
+    background:rgba(15,23,42,.65);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    border-radius:28px;
+}
+
+/* ==========================
+   LOGO
+========================== */
+
+.auth-logo{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:var(--primary);
+
+    letter-spacing:2px;
+}
+
+/* ==========================
+   TITULOS AUTH
+========================== */
+
+.auth-title{
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:2rem;
+}
+
+.auth-subtitle{
+
+    color:var(--text-muted);
+
+    font-size:1rem;
+}
+
+/* ==========================
+   INPUTS
+========================== */
+
+.form-control{
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:white;
+
+    height:58px;
+
+    border-radius:14px;
+}
+
+.form-control:focus{
+
+    background:rgba(255,255,255,.05);
+
+    border-color:var(--primary);
+
+    color:white;
+
+    box-shadow:
+        0 0 0 .20rem rgba(89,217,123,.15);
+}
+
+.form-control::placeholder{
+
+    color:#64748b;
+}
+
+/* ==========================
+   INPUT GROUP
+========================== */
+
+.input-group-text{
+
+    background:rgba(255,255,255,.03);
+
+    border:1px solid rgba(255,255,255,.08);
+
+    color:var(--text-muted);
+
+    border-radius:14px 0 0 14px;
+}
+
+.input-group .form-control{
+
+    border-left:none;
+}
+
+/* ==========================
+   BOTÕES
+========================== */
+
+.btn-app,
+.btn-success{
+
+    background:var(--primary);
+
+    border:none;
+
+    color:white;
+
+    font-weight:700;
+
+    height:58px;
+
+    border-radius:14px;
+
+    transition:.25s;
+}
+
+.btn-app:hover,
+.btn-success:hover{
+
+    background:var(--primary-hover);
+
+    transform:translateY(-2px);
+
+    color:white;
+}
+
+/* ==========================
+   BOTÃO OUTLINE
+========================== */
+
+.btn-outline-success{
+
+    border:1px solid var(--primary);
+
+    color:var(--primary);
+
+    border-radius:14px;
+
+    height:58px;
+}
+
+.btn-outline-success:hover{
+
+    background:var(--primary);
+
+    color:white;
+}
+
+/* ==========================
+   LINKS
+========================== */
+
+.auth-link{
+
+    color:var(--primary);
+
+    text-decoration:none;
+}
+
+.auth-link:hover{
+
+    color:var(--primary-hover);
+}
+
+/* ==========================
+   TEXTO SECUNDÁRIO
+========================== */
+
+.text-muted-app{
+
+    color:var(--text-muted);
+}
+
+/* ==========================
+   TABELAS
+========================== */
+
+.table-app{
+
+    background:var(--bg-card);
+
+    color:white;
+}
+
+.table-app th{
+
+    color:var(--primary);
+}
+
+/* ==========================
+   SIDEBAR
+========================== */
+
+.sidebar{
+
+    background:rgba(15,23,42,.85);
+
+    backdrop-filter:blur(20px);
+
+    border-right:1px solid rgba(255,255,255,.06);
+}
+
+/* ==========================
+   MENU
+========================== */
+
+.menu-link{
+
+    color:var(--text-muted);
+
+    border-radius:12px;
+
+    transition:.2s;
+}
+
+.menu-link:hover{
+
+    background:rgba(255,255,255,.04);
+
+    color:white;
+}
+
+.menu-link.active{
+
+    background:rgba(89,217,123,.12);
+
+    color:white;
+
+    border-left:4px solid var(--primary);
+}
