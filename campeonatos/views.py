@@ -1,16 +1,14 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-
 from campeonatos.models import Grupo, Jogo, Palpite
 from usuarios.models import Profile
 
+
+
 User = get_user_model()
 
-
-# =====================================================
 # FAZER PALPITES
-# =====================================================
 @login_required
 def fazer_palpites(request):
 
@@ -113,9 +111,8 @@ def fazer_palpites(request):
     })
 
 
-# =====================================================
+
 # MEUS PALPITES
-# =====================================================
 @login_required
 def meus_palpites(request):
     palpites = (
@@ -137,9 +134,8 @@ def meus_palpites(request):
         'palpites': palpites
     })
 
-# =====================================================
+
 # RANKING
-# =====================================================
 EXCLUDED_USERS = ["rootmaster"]
 
 @login_required
@@ -221,9 +217,8 @@ def ranking(request):
     })
 
 
-# =====================================================
+
 # FINALIZAR JOGO
-# =====================================================
 def finalizar_jogo(request, jogo_id):
     jogo = Jogo.objects.get(id=jogo_id)
 
@@ -233,7 +228,6 @@ def finalizar_jogo(request, jogo_id):
     jogo.save()
 
     return redirect('admin_jogos')
-
 
 
 # PALPITES DO USUÁRIO
@@ -264,9 +258,8 @@ def palpites_usuario(request, user_id):
     total_jogos = Jogo.objects.count()
     total_palpites = palpites.count()
 
-    # =========================
+
     # ESTATÍSTICAS DO JOGO
-    # =========================
     vitorias_certas = 0
     acertos_resultado = 0
     erros = 0
@@ -305,15 +298,11 @@ def palpites_usuario(request, user_id):
         else:
             erros += 1
 
-    # =========================
     # JOGOS ABERTOS / FECHADOS
-    # =========================
     jogos_encerrados = Jogo.objects.filter(encerrado=True).count()
     jogos_abertos = Jogo.objects.filter(encerrado=False).count()
 
-    # =========================
     # POSIÇÃO NO RANKING
-    # =========================
     ranking_lista = list(
         Profile.objects
         .exclude(user__username__in=["rootmaster"])
@@ -347,3 +336,5 @@ def palpites_usuario(request, user_id):
         'palpites': palpites,
         'estatisticas': estatisticas,
     })
+    
+    

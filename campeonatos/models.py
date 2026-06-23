@@ -33,10 +33,8 @@ class Grupo(models.Model):
 
 class Time(models.Model):
     nome = models.CharField(max_length=100)
-
     codigo_pais = models.CharField(max_length=2)
-    grupo = models.ForeignKey(Grupo,
-        on_delete=models.SET_NULL, null=True, blank=True, related_name='times')
+    grupo = models.ForeignKey(Grupo, on_delete=models.SET_NULL, null=True, blank=True, related_name='times')
 
     def __str__(self):
         return self.nome
@@ -44,36 +42,14 @@ class Time(models.Model):
 
 class Jogo(models.Model):
     codigo_jogo = models.CharField(max_length=20, unique=True, null=True, blank=True)
-    campeonato = models.ForeignKey(
-        Campeonato,
-        on_delete=models.CASCADE,
-        related_name='jogos'
-    )
-
-    estadio = models.CharField(
-        max_length=200,
-        blank=True
-    )
-
+    campeonato = models.ForeignKey(Campeonato, on_delete=models.CASCADE, related_name='jogos')
+    estadio = models.CharField(max_length=200, blank=True)
     rodada = models.IntegerField()
-
-    time_casa = models.ForeignKey(
-        Time,
-        on_delete=models.CASCADE,
-        related_name='jogos_casa'
-    )
-
-    time_visitante = models.ForeignKey(
-        Time,
-        on_delete=models.CASCADE,
-        related_name='jogos_visitante'
-    )
-
+    time_casa = models.ForeignKey(Time, on_delete=models.CASCADE, related_name='jogos_casa')
+    time_visitante = models.ForeignKey(Time,on_delete=models.CASCADE,related_name='jogos_visitante' )
     data_jogo = models.DateTimeField()
-
     gols_casa = models.IntegerField(null=True, blank=True)
     gols_visitante = models.IntegerField(null=True, blank=True)
-
     pontos_calculados = models.BooleanField(default=False)
     encerrado = models.BooleanField(default=False)
 
@@ -84,10 +60,8 @@ class Jogo(models.Model):
 class Palpite(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE, related_name='palpites')
     jogo = models.ForeignKey(Jogo, on_delete=models.CASCADE, related_name='palpites')
-
     gols_casa = models.PositiveIntegerField(default=0)
     gols_visitante = models.PositiveIntegerField(default=0)
-
     pontos = models.PositiveIntegerField(default=0)
     criado_em = models.DateTimeField(auto_now_add=True)
 
